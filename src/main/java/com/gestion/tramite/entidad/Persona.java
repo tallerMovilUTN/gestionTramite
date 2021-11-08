@@ -24,8 +24,8 @@ public class Persona
     private Integer cp;
     private String localidad;
     private String provincia;
-    private Integer celularNro;
-    private Integer telefonoParticular;
+    private Long celularNro;
+    private Long telefonoParticular;
     private String estadocivil;
     private Date fechaMatrimonio;
     private String lugarMatrimonio;

@@ -1,4 +1,4 @@
-package com.fab.servicioFabrica.util;
+package com.gestion.tramite.util;
 
 
 import java.io.File;

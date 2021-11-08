@@ -1,6 +1,7 @@
 package com.gestion.tramite.controller;
 
-import com.fab.servicioFabrica.util.FileUtils;
+
+import com.gestion.tramite.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -39,7 +40,7 @@ public class FileController {
         String extension = getFileExtension(file.getOriginalFilename());
         logger.info("EXTENSION ARCHIVO:: "+extension);
 
-        String localPath="C:/IntelliJ/IMAGENES";
+        String localPath="C:/IntelliJ/gestionTramiteDocumentos";
         String nameFileFinal= fileName+getFileExtension(file.getOriginalFilename());
 
         if(FileUtils.upload(file, localPath, fileName))
