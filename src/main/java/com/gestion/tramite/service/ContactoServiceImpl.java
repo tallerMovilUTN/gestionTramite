@@ -7,6 +7,7 @@ import com.gestion.tramite.repositorio.PersonaRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -29,6 +30,7 @@ public class ContactoServiceImpl implements ContactoService
     @Override
     public Contacto createContacto(Contacto a1) {
         a1.setEstado(1);
+        a1.setFechaAlta(new Date());
         return repo.save(a1);
     }
 
@@ -53,5 +55,11 @@ public class ContactoServiceImpl implements ContactoService
         catDB.setEstado(0);
 
         return repo.save(catDB);
+    }
+
+    public void borrarContacto(Integer id) {
+        Contacto contacto = getContacto(id);
+        repo.delete(contacto);
+
     }
 }

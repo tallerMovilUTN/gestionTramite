@@ -29,7 +29,6 @@ public class Contacto
     private String provincia;
     private Long celularNro;
     private Long telefonoParticular;
-    private String estadocivil;
     private Date fechaMatrimonio;
     private String lugarMatrimonio;
     private Date fechaAlta;

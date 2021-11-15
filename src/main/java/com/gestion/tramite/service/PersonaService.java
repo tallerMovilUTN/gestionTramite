@@ -13,4 +13,5 @@ public interface PersonaService {
     public Persona createPersona(Persona a1);
     public Persona updatePersona(Persona a1);
     public Persona deletePersona(Integer id);
+    public void borrarPersona(Integer id);
 }

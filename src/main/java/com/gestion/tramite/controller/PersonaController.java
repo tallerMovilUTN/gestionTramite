@@ -1,6 +1,12 @@
 package com.gestion.tramite.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gestion.tramite.entidad.Contacto;
 import com.gestion.tramite.entidad.Persona;
+import com.gestion.tramite.repositorio.ContactoRepositorio;
+import com.gestion.tramite.repositorio.PersonaRepositorio;
+import com.gestion.tramite.service.ContactoService;
 import com.gestion.tramite.service.PersonaService;
 import com.gestion.tramite.util.FileUtils;
 import org.slf4j.Logger;
@@ -12,7 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,6 +31,15 @@ public class PersonaController
 {
     @Autowired
     PersonaService service;
+
+    @Autowired
+    ContactoService serContacto;
+
+    //PersonaRepositorio repoPer;
+
+    //ContactoRepositorio repoContac;
+
+
     Logger logger = LoggerFactory.getLogger(PersonaController.class);
 
 
@@ -96,6 +113,203 @@ public class PersonaController
         return ResponseEntity.status(HttpStatus.CREATED).body(a1);
     }
 
+
+
+
+    /**
+     *
+     * @return
+     */
+    @ResponseBody
+    //@RequestMapping(value = "/img",method = RequestMethod.POST)
+    @RequestMapping(value = "/upload",method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Persona> upload(@RequestParam("fotoFrente") MultipartFile fotoFrente,
+                         @RequestParam("fotoDorso" )MultipartFile fotoDorso,
+                         @RequestPart("persona") String dPersona,
+                         @RequestPart("padre") String dPadre,
+                         @RequestPart("madre") String dMadre,
+                         @RequestPart("abueloPat") String dabueloPat,
+                         @RequestPart("abuelaPat") String dabuelaPat,
+                         @RequestPart("abueloMat") String dabueloMat,
+                         @RequestPart("abuelaMat") String dabuelaMat
+                         )
+
+    {
+        logger.info("ESTOY EN upload");
+        logger.info("NOMBRE ARCHIVO_"+fotoFrente.getOriginalFilename());
+        String extFotoFrente = getFileExtension(fotoFrente.getOriginalFilename());
+        String extFotoDorso = getFileExtension(fotoDorso.getOriginalFilename());
+        logger.info("EXTENSION ARCHIVO_FOTO_FRENTE:: "+extFotoFrente);
+        logger.info("EXTENSION ARCHIVO_FOTO_DORSO:: "+extFotoDorso);
+
+
+        logger.info("JSON(PERSONA):: "+dPersona);
+        logger.info("JSON(PADRE):: "+dPadre);
+        logger.info("JSON(MADRE):: "+dMadre);
+        logger.info("JSON(ABUELO PAT):: "+dabueloPat);
+        logger.info("JSON(ABUELA PAT):: "+dabuelaPat);
+        logger.info("JSON(ABUELO MAT):: "+dabueloMat);
+        logger.info("JSON(ABUELA MAT):: "+dabuelaMat);
+
+
+        Persona cli = null;
+        Contacto padre,madre,abueloPat,abuelaPat, abueloMat,abuelaMat;
+        Persona a1=null;
+        Contacto pa=null,ma=null,abloPat=null,ablaPat=null,abloMat=null,ablaMat=null;
+
+
+        String localPath=null,nomFileFinal1=null,nomFileFinal2=null;
+
+        try {
+            cli = new ObjectMapper().readValue(dPersona, Persona.class);
+            padre = new ObjectMapper().readValue(dPadre, Contacto.class);
+            madre = new ObjectMapper().readValue(dMadre, Contacto.class);
+            abueloPat = new ObjectMapper().readValue(dabueloPat, Contacto.class);
+            abuelaPat = new ObjectMapper().readValue(dabuelaPat, Contacto.class);
+            abueloMat = new ObjectMapper().readValue(dabueloMat, Contacto.class);
+            abuelaMat = new ObjectMapper().readValue(dabuelaMat, Contacto.class);
+
+            localPath="C:/IntelliJ/gestionTramiteDocumentos"+"/"+cli.getDni();
+            File direc= new File(localPath);
+            if (!direc.exists())
+            {
+                if (direc.mkdirs())
+                {
+                    System.out.println("SE CREO EL DIRECTOTIIO");
+                }
+            }
+
+            Date fechaActual=new Date();
+            System.out.println(Util.getFixedString(fechaActual, "yyyyMMdd-HHmmss"));
+
+            nomFileFinal1= cli.getDni()+"_"+Util.getFixedString(fechaActual, "yyyyMMdd_HHmmss")+"_"+"FotoFrente"+getFileExtension(fotoFrente.getOriginalFilename());
+            nomFileFinal2= cli.getDni()+"_"+Util.getFixedString(fechaActual, "yyyyMMdd_HHmmss")+"_"+"FotoDorso"+getFileExtension(fotoDorso.getOriginalFilename());
+            logger.info("nomFileFOTO1: "+nomFileFinal1);
+            logger.info("nomFileFOTO2: "+nomFileFinal2);
+            logger.info("APELLIDO: "+cli.getApellido()+" "+cli.getNombre());
+            boolean band1 = FileUtils.upload(fotoFrente, localPath, nomFileFinal1);
+            boolean band2 = FileUtils.upload(fotoDorso, localPath, nomFileFinal2);
+
+            if(band1 && band2)
+            {
+                ////GRABO LOS DATOS EN LA BASE
+                a1 =  service.createPersona(cli);
+                logger.info("DIO DE ALTAL AL CLIENTE");
+                padre.setPersona(a1);
+                madre.setPersona(a1);
+                abueloPat.setPersona(a1);
+                abuelaPat.setPersona(a1);
+                abueloMat.setPersona(a1);
+                abuelaMat.setPersona(a1);
+
+
+
+                logger.info("padre: "+padre.getApellido()+" "+padre.getNombre());
+                logger.info("tipoRel: "+padre.getTipoRelacion().getDescripcion());
+
+
+                pa =  serContacto.createContacto(padre);
+                logger.info("DIO DE ALTA EL PADRE");
+                ma =  serContacto.createContacto(madre);
+
+                abloPat =  serContacto.createContacto(abueloPat);
+                ablaPat =  serContacto.createContacto(abuelaPat);
+
+                abloMat =  serContacto.createContacto(abueloMat);
+                ablaMat =  serContacto.createContacto(abuelaMat);
+
+                if ((Objects.isNull(pa)) &&
+                   (Objects.isNull(ma)) &&
+                   (Objects.isNull(abloPat)) &&
+                   (Objects.isNull(ablaPat)) &&
+                   (Objects.isNull(abloMat)) &&
+                   (Objects.isNull(ablaMat)))
+                {
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                }
+
+                return ResponseEntity.status(HttpStatus.CREATED).body(a1);
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
+        } catch (Exception e) {
+            logger.error("DIO ERROR");
+            e.printStackTrace();
+
+            /////////////DEBO HACER UN ROLLBACK///////////////
+            File f1;
+            if (Objects.nonNull(localPath) && Objects.nonNull(nomFileFinal1))
+            {
+                logger.error("PATH: "+localPath+"/"+nomFileFinal1);
+                f1= new File(localPath+"/"+nomFileFinal1);
+                f1.delete();
+            }
+
+            if (Objects.nonNull(localPath) && Objects.nonNull(nomFileFinal2))
+            {
+                f1= new File(localPath+"/"+nomFileFinal2);
+                f1.delete();
+            }
+
+
+
+
+
+            if (Objects.nonNull(pa))
+            {
+                serContacto.borrarContacto(pa.getId());
+                logger.error("BORRE EL PADRE");
+            }
+
+
+            if (Objects.nonNull(ma))
+            {
+                serContacto.borrarContacto(ma.getId());
+                logger.error("BORRE LA MADRE");
+            }
+
+            if (Objects.nonNull(abloPat))
+            {
+                serContacto.borrarContacto(abloPat.getId());
+                logger.error("BORRE EL ABUELO PADRE");
+            }
+
+            if (Objects.nonNull(ablaPat))
+            {
+                serContacto.borrarContacto(ablaPat.getId());
+                logger.error("BORRE EL ABUELA PADRE");
+            }
+
+            if (Objects.nonNull(abloMat))
+            {
+                serContacto.borrarContacto(abloMat.getId());
+                logger.error("BORRE EL ABUELO MADRE");
+            }
+
+            if (Objects.nonNull(ablaMat))
+            {
+                serContacto.borrarContacto(ablaMat.getId());
+                logger.error("BORRE EL ABUELA MADRE");
+            }
+
+            if (Objects.nonNull(a1))
+            {
+                service.borrarPersona(a1.getId());
+                logger.error("BORRE EL CLIENTE");
+            }
+
+
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
+
+
+        }
+
+
+    }
 
 
 

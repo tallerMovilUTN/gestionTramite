@@ -1,5 +1,8 @@
 package com.gestion.tramite.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Util
 {
 
@@ -10,6 +13,17 @@ public class Util
             return ""; // empty extension
         }
         return namefile.substring(lastIndexOf);
+    }
+
+
+
+
+    public static String getFixedString(Date valor, String pattern )
+    {
+        if (valor == null) return null;
+        SimpleDateFormat nf = new SimpleDateFormat(pattern);
+        return nf.format(valor);
+
     }
 
 

@@ -5,6 +5,7 @@ import com.gestion.tramite.repositorio.PersonaRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,6 +28,7 @@ public class PersonaServiceImpl implements PersonaService
     @Override
     public Persona createPersona(Persona a1) {
         a1.setEstado(1);
+        a1.setFechaAlta(new Date());
         return repo.save(a1);
     }
 
@@ -51,5 +53,16 @@ public class PersonaServiceImpl implements PersonaService
         catDB.setEstado(0);
 
         return repo.save(catDB);
+    }
+
+
+
+
+    @Override
+    public void borrarPersona(Integer id) {
+        Persona pe = getPersona(id);
+
+        repo.delete(pe);
+        //return repo.save(catDB);
     }
 }
