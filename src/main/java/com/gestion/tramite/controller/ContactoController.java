@@ -38,17 +38,19 @@ public class ContactoController
 
 
 
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<Contacto> getPersona(@PathVariable("id") Integer id)
-    {
-        logger.info("ESTOY EN getContacto-"+id);
-        Contacto cat =  service.getContacto(id);
-        if (null==cat){
-            return ResponseEntity.notFound().build();
-        }
-        logger.info("ESTOY EN getContacto-"+cat.getApellido());
 
-        return ResponseEntity.ok(cat);
+
+
+
+    @GetMapping(value = "/{idPersona}")
+    public ResponseEntity<List<Contacto>> getContactos(@PathVariable("idPersona") Integer idPersona)
+    {
+        logger.info("ESTOY EN getContacto-"+idPersona);
+        List<Contacto> result = service.getContactos(idPersona);
+        if (result.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(result);
     }
 
 

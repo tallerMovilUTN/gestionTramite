@@ -18,13 +18,15 @@ public class ContactoServiceImpl implements ContactoService
 
 
     @Override
-    public List<Contacto> listAllContactos() {
+    public List<Contacto> listAllContactos()
+    {
         return repo.findAll();
     }
 
     @Override
-    public Contacto getContacto(Integer id) {
-        return repo.findById(id).orElse(null);
+    public List<Contacto> getContactos(Integer idPersona)
+    {
+        return repo.getContactos(idPersona);
     }
 
     @Override
@@ -62,4 +64,12 @@ public class ContactoServiceImpl implements ContactoService
         repo.delete(contacto);
 
     }
+
+
+
+    @Override
+    public Contacto getContacto(Integer id) {
+        return repo.findById(id).orElse(null);
+    }
+
 }
