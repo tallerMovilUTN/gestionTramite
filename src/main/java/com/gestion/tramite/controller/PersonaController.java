@@ -12,11 +12,15 @@ import com.gestion.tramite.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,6 +38,12 @@ public class PersonaController
 
     @Autowired
     ContactoService serContacto;
+
+
+
+    @Value("${web.upload-path}")
+    private String path;
+
 
     //PersonaRepositorio repoPer;
 
@@ -80,6 +90,19 @@ public class PersonaController
 
 
 
+    @GetMapping("/file/{filename}")
+    @ResponseBody
+    public ResponseEntity<Resource> getFile(@PathVariable String filename,@RequestParam("carpeta") String carpeta) {
+        logger.info("ESTOY FILE: "+filename);
+        Resource file = service.load(filename,carpeta);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
+
+
+
+
     @PostMapping
     public ResponseEntity<Persona> createPersona(@RequestBody Persona cli)
     {
@@ -98,18 +121,23 @@ public class PersonaController
 
 
 
-        String localPath="C:/IntelliJ/gestionTramiteDocumentos";
+        //String localPath="C:/IntelliJ/gestionTramiteDocumentos";
         //String nameFileFinal= fileName+getFileExtension(file.getOriginalFilename());
         String extension = getFileExtension(file1.getOriginalFilename());
         logger.info("EXTENSION ARCHIVO:: "+extension);
         String fileName1 = cli.getDni()+"-fotoFrente"+extension;
         String fileName2 = cli.getDni()+"-fotoDorso"+extension;
-        cli.setIdfotoDorso(localPath+"/"+fileName1);
-        cli.setIdfotoFrente(localPath+"/"+fileName2);
+        cli.setIdfotoDorso(path+"/"+fileName1);
+        cli.setIdfotoFrente(path+"/"+fileName2);
+
+
+        logger.info("RUTA ARCHIVO1:: "+cli.getIdfotoFrente());
+        logger.info("RUTA ARCHIVO2:: "+cli.getIdfotoDorso());
+
         Persona a1 =  service.createPersona(cli);
 
-        FileUtils.upload(file1, localPath, fileName1);
-        FileUtils.upload(file2, localPath, fileName2);
+        FileUtils.upload(file1, path, fileName1);
+        FileUtils.upload(file2, path, fileName2);
         return ResponseEntity.status(HttpStatus.CREATED).body(a1);
     }
 
@@ -169,7 +197,11 @@ public class PersonaController
             abueloMat = new ObjectMapper().readValue(dabueloMat, Contacto.class);
             abuelaMat = new ObjectMapper().readValue(dabuelaMat, Contacto.class);
 
-            localPath="C:/IntelliJ/gestionTramiteDocumentos"+"/"+cli.getDni();
+            localPath=path+cli.getDni();
+            logger.info("localPath:: "+localPath);
+
+
+
             File direc= new File(localPath);
             if (!direc.exists())
             {
@@ -189,6 +221,8 @@ public class PersonaController
             logger.info("APELLIDO: "+cli.getApellido()+" "+cli.getNombre());
             boolean band1 = FileUtils.upload(fotoFrente, localPath, nomFileFinal1);
             boolean band2 = FileUtils.upload(fotoDorso, localPath, nomFileFinal2);
+            cli.setIdfotoFrente(nomFileFinal1);
+            cli.setIdfotoDorso(nomFileFinal2);
 
             if(band1 && band2)
             {
