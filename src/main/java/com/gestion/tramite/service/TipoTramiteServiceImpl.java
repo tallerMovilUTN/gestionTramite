@@ -22,7 +22,7 @@ public class TipoTramiteServiceImpl implements TipoTramiteService
     }
 
     @Override
-    public TipoTramite getTipoTramite(Integer id) {
+    public TipoTramite getTipoTramite(Long id) {
         return repo.findById(id).orElse(null);
     }
 
@@ -55,7 +55,7 @@ public class TipoTramiteServiceImpl implements TipoTramiteService
     }
 
     @Override
-    public TipoTramite deleteTipoTramite(Integer id) {
+    public TipoTramite deleteTipoTramite(Long id) {
 
         System.out.println("deleteTipoTramite en serviceImpl 1");
         TipoTramite catDB = getTipoTramite(id);

@@ -1,6 +1,7 @@
 package com.gestion.tramite.entidad;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -11,8 +12,9 @@ import java.util.Date;
 public class Persona
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    @GeneratedValue(strategy= GenerationType.AUTO,generator="native")
+    @GenericGenerator(name = "native",strategy = "native")
+    private Long id;
     private String apellido;
     private String nombre;
     private String email;

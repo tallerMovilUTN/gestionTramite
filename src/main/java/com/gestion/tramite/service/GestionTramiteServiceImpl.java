@@ -23,7 +23,7 @@ public class GestionTramiteServiceImpl implements GestionTramiteService
     }
 
     @Override
-    public GestionTramite getGestionTramite(Integer id) {
+    public GestionTramite getGestionTramite(Long id) {
         return repo.findById(id).orElse(null);
     }
 
@@ -47,7 +47,7 @@ public class GestionTramiteServiceImpl implements GestionTramiteService
     }
 
     @Override
-    public GestionTramite deleteGestionTramite(Integer id) {
+    public GestionTramite deleteGestionTramite(Long id) {
         GestionTramite a1 = getGestionTramite(id);
         if (null == a1){
             return null;
@@ -58,7 +58,7 @@ public class GestionTramiteServiceImpl implements GestionTramiteService
     }
 
     @Override
-    public void borrarGestionTramite(Integer id) {
+    public void borrarGestionTramite(Long id) {
         GestionTramite a1 = getGestionTramite(id);
         repo.delete(a1);
     }

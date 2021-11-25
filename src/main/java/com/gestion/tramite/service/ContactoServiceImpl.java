@@ -24,7 +24,7 @@ public class ContactoServiceImpl implements ContactoService
     }
 
     @Override
-    public List<Contacto> getContactos(Integer idPersona)
+    public List<Contacto> getContactos(Long idPersona)
     {
         return repo.getContactos(idPersona);
     }
@@ -49,7 +49,7 @@ public class ContactoServiceImpl implements ContactoService
     }
 
     @Override
-    public Contacto deleteContacto(Integer id) {
+    public Contacto deleteContacto(Long id) {
         Contacto catDB = getContacto(id);
         if (null == catDB){
             return null;
@@ -59,7 +59,7 @@ public class ContactoServiceImpl implements ContactoService
         return repo.save(catDB);
     }
 
-    public void borrarContacto(Integer id) {
+    public void borrarContacto(Long id) {
         Contacto contacto = getContacto(id);
         repo.delete(contacto);
 
@@ -68,7 +68,7 @@ public class ContactoServiceImpl implements ContactoService
 
 
     @Override
-    public Contacto getContacto(Integer id) {
+    public Contacto getContacto(Long id) {
         return repo.findById(id).orElse(null);
     }
 

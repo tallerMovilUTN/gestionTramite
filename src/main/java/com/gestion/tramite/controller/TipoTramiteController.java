@@ -39,7 +39,7 @@ public class TipoTramiteController
 
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<TipoTramite> getTipoTramite(@PathVariable("id") Integer id)
+    public ResponseEntity<TipoTramite> getTipoTramite(@PathVariable("id") Long id)
     {
         TipoTramite cat =  service.getTipoTramite(id);
         if (null==cat){
@@ -58,7 +58,7 @@ public class TipoTramiteController
 
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<TipoTramite> updateTipoTramite(@PathVariable("id") Integer id, @RequestBody TipoTramite cli){
+    public ResponseEntity<TipoTramite> updateTipoTramite(@PathVariable("id") Long id, @RequestBody TipoTramite cli){
 
         System.out.println("estoy en updateTipoTramite");
         System.out.println("estoy en updateTipoTramite id"+id);
@@ -73,7 +73,7 @@ public class TipoTramiteController
 
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<TipoTramite>  deleteTipoTramite(@PathVariable("id") Integer id){
+    public ResponseEntity<TipoTramite>  deleteTipoTramite(@PathVariable("id") Long id){
 
         System.out.println("estoy en deleteTipoTramite");
 

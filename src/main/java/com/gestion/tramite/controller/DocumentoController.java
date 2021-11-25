@@ -38,7 +38,7 @@ public class DocumentoController
 
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Documento> getDocumento(@PathVariable("id") Integer id)
+    public ResponseEntity<Documento> getDocumento(@PathVariable("id") Long id)
     {
         Documento cat =  service.getDocumento(id);
         if (null==cat){
@@ -57,7 +57,7 @@ public class DocumentoController
 
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Documento> updateDocumento(@PathVariable("id") Integer id, @RequestBody Documento cli){
+    public ResponseEntity<Documento> updateDocumento(@PathVariable("id") Long id, @RequestBody Documento cli){
 
         System.out.println("estoy en updateTDocumento");
         System.out.println("estoy en updateDocumento id"+id);
@@ -72,7 +72,7 @@ public class DocumentoController
 
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Documento>  deleteDocumento(@PathVariable("id") Integer id){
+    public ResponseEntity<Documento>  deleteDocumento(@PathVariable("id") Long id){
 
         System.out.println("estoy en deleteDocumento");
 

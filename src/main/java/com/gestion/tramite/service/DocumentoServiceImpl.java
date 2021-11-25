@@ -22,7 +22,7 @@ public class DocumentoServiceImpl implements DocumentoService
     }
 
     @Override
-    public Documento getDocumento(Integer id) {
+    public Documento getDocumento(Long id) {
         return repo.findById(id).orElse(null);
     }
 
@@ -54,7 +54,7 @@ public class DocumentoServiceImpl implements DocumentoService
     }
 
     @Override
-    public Documento deleteDocumento(Integer id) {
+    public Documento deleteDocumento(Long id) {
 
         System.out.println("deleteDocumento en serviceImpl 1");
         Documento catDB = getDocumento(id);

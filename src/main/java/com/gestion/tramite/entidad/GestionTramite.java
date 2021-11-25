@@ -3,6 +3,7 @@ package com.gestion.tramite.entidad;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,8 +14,9 @@ import java.util.Date;
 public class GestionTramite {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    @GeneratedValue(strategy= GenerationType.AUTO,generator="native")
+    @GenericGenerator(name = "native",strategy = "native")
+    private Long id;
 
 
     @OneToOne(fetch = FetchType.LAZY)

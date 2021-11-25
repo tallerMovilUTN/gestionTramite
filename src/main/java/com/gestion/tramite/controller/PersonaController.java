@@ -75,7 +75,7 @@ public class PersonaController
 
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Persona> getPersona(@PathVariable("id") Integer id)
+    public ResponseEntity<Persona> getPersona(@PathVariable("id") Long id)
     {
         logger.info("ESTOY EN getPersona-"+id);
         Persona cat =  service.getPersona(id);
@@ -349,7 +349,7 @@ public class PersonaController
 
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Persona> updatePersona(@PathVariable("id") Integer id, @RequestBody Persona cli){
+    public ResponseEntity<Persona> updatePersona(@PathVariable("id") Long id, @RequestBody Persona cli){
         cli.setId(id);
         Persona cliBD =  service.updatePersona(cli);
         if (cliBD == null)
@@ -361,7 +361,7 @@ public class PersonaController
 
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Persona> deletePersona(@PathVariable("id") Integer id){
+    public ResponseEntity<Persona> deletePersona(@PathVariable("id") Long id){
         Persona cliDel = service.deletePersona(id);
         if (cliDel == null)
         {

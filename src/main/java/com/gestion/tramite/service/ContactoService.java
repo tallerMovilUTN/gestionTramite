@@ -10,10 +10,10 @@ import java.util.List;
 public interface ContactoService {
 
     public List<Contacto> listAllContactos();
-    public List<Contacto> getContactos(Integer idPersona);
-    public Contacto getContacto(Integer id);
+    public List<Contacto> getContactos(Long idPersona);
+    public Contacto getContacto(Long id);
     public Contacto createContacto(Contacto a1);
     public Contacto updateContacto(Contacto a1);
-    public Contacto deleteContacto(Integer id);
-    public void borrarContacto(Integer id);
+    public Contacto deleteContacto(Long id);
+    public void borrarContacto(Long id);
 }

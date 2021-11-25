@@ -43,7 +43,7 @@ public class ContactoController
 
 
     @GetMapping(value = "/{idPersona}")
-    public ResponseEntity<List<Contacto>> getContactos(@PathVariable("idPersona") Integer idPersona)
+    public ResponseEntity<List<Contacto>> getContactos(@PathVariable("idPersona") Long idPersona)
     {
         logger.info("ESTOY EN getContacto-"+idPersona);
         List<Contacto> result = service.getContactos(idPersona);
@@ -66,7 +66,7 @@ public class ContactoController
 
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Contacto> updatePersona(@PathVariable("id") Integer id, @RequestBody Contacto cli){
+    public ResponseEntity<Contacto> updatePersona(@PathVariable("id") Long id, @RequestBody Contacto cli){
         cli.setId(id);
         Contacto cliBD =  service.updateContacto(cli);
         if (cliBD == null)
@@ -78,7 +78,7 @@ public class ContactoController
 
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Contacto> deleteContacto(@PathVariable("id") Integer id){
+    public ResponseEntity<Contacto> deleteContacto(@PathVariable("id") Long id){
         Contacto cliDel = service.deleteContacto(id);
         if (cliDel == null)
         {

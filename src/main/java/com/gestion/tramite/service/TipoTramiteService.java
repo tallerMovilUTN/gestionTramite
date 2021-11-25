@@ -7,8 +7,8 @@ import java.util.List;
 public interface TipoTramiteService {
 
      List<TipoTramite> listAllTipoTramite();
-     TipoTramite getTipoTramite(Integer id);
+     TipoTramite getTipoTramite(Long id);
      TipoTramite createTipoTramite(TipoTramite a1);
      TipoTramite updateTipoTramite(TipoTramite a1);
-      TipoTramite deleteTipoTramite(Integer id);
+      TipoTramite deleteTipoTramite(Long id);
 }

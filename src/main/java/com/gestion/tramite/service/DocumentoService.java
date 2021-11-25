@@ -7,8 +7,8 @@ import java.util.List;
 public interface DocumentoService {
 
      List<Documento> listAllDocumento();
-     Documento getDocumento(Integer id);
+     Documento getDocumento(Long id);
      Documento createDocumento(Documento a1);
      Documento updateDocumento(Documento a1);
-      Documento deleteDocumento(Integer id);
+      Documento deleteDocumento(Long id);
 }

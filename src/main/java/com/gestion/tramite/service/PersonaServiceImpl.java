@@ -43,7 +43,7 @@ public class PersonaServiceImpl implements PersonaService
     }
 
     @Override
-    public Persona getPersona(Integer id) {
+    public Persona getPersona(Long id) {
         return repo.findById(id).orElse(null);
     }
 
@@ -67,7 +67,7 @@ public class PersonaServiceImpl implements PersonaService
     }
 
     @Override
-    public Persona deletePersona(Integer id) {
+    public Persona deletePersona(Long id) {
         Persona catDB = getPersona(id);
         if (null == catDB){
             return null;
@@ -81,7 +81,7 @@ public class PersonaServiceImpl implements PersonaService
 
 
     @Override
-    public void borrarPersona(Integer id) {
+    public void borrarPersona(Long id) {
         Persona pe = getPersona(id);
 
         repo.delete(pe);
