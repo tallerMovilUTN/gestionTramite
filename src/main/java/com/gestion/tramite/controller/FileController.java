@@ -1,10 +1,7 @@
 package com.gestion.tramite.controller;
 
 
-import com.gestion.tramite.entidad.Archivo;
-import com.gestion.tramite.entidad.FileMessage;
-import com.gestion.tramite.entidad.FileModel;
-import com.gestion.tramite.entidad.Persona;
+import com.gestion.tramite.entidad.*;
 import com.gestion.tramite.service.FileService;
 import com.gestion.tramite.service.FileServiceImp;
 import com.gestion.tramite.util.FileUtils;
@@ -173,7 +170,16 @@ public class FileController {
 
 
 
-
+    @GetMapping
+    public ResponseEntity<List<Archivo>> listFiles()
+    {
+        List<Archivo> files = new ArrayList<>();
+        files = fileService.listAllFiles();
+        if (files.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(files);
+    }
 
 
 
