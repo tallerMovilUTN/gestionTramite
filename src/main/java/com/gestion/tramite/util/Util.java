@@ -1,4 +1,4 @@
-package com.gestion.tramite.controller;
+package com.gestion.tramite.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,6 +14,7 @@ public class Util
         }
         return namefile.substring(lastIndexOf);
     }
+
 
 
 

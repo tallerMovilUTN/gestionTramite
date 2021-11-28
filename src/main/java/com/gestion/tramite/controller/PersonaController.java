@@ -1,14 +1,12 @@
 package com.gestion.tramite.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gestion.tramite.entidad.Contacto;
 import com.gestion.tramite.entidad.Persona;
-import com.gestion.tramite.repositorio.ContactoRepositorio;
-import com.gestion.tramite.repositorio.PersonaRepositorio;
 import com.gestion.tramite.service.ContactoService;
 import com.gestion.tramite.service.PersonaService;
 import com.gestion.tramite.util.FileUtils;
+import com.gestion.tramite.util.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
