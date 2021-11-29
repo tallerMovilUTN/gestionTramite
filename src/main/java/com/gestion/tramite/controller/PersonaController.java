@@ -2,8 +2,10 @@ package com.gestion.tramite.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gestion.tramite.entidad.Contacto;
+import com.gestion.tramite.entidad.FileModel;
 import com.gestion.tramite.entidad.Persona;
 import com.gestion.tramite.service.ContactoService;
+import com.gestion.tramite.service.FileService;
 import com.gestion.tramite.service.PersonaService;
 import com.gestion.tramite.util.FileUtils;
 import com.gestion.tramite.util.Util;
@@ -18,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 
 import java.io.File;
@@ -25,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @CrossOrigin( origins = "*" , methods = { RequestMethod. GET , RequestMethod. POST,RequestMethod.PUT })
 @RestController
@@ -33,6 +37,8 @@ public class PersonaController
 {
     @Autowired
     PersonaService service;
+
+    FileService fileService;
 
     @Autowired
     ContactoService serContacto;
@@ -236,9 +242,41 @@ public class PersonaController
             cli.setIdfotoFrente(nomFileFinal1);
             cli.setIdfotoDorso(nomFileFinal2);
 
+
+
+            String urlFotoFrente="";
+            String urlFotoDorso="";
+
             if(band1 && band2)
             {
+
+                    /////////////////////////////OBTENGO LA URL DE LOS ARCHIVOS/////////////////////////////////////////////
+                    /////DEBO OBTENER LA URL DEL ARCHIVO SUBIDO
+                    List<FileModel> fileInfos = fileService.loadAll(a1.getDni().toString()).map(path -> {
+                        String filename = path.getFileName().toString();
+                        logger.info("filename: "+filename);
+                        String url = MvcUriComponentsBuilder.fromMethodName(FileController.class, "getFile",
+                                path.getFileName().toString()).build().toString();
+                        return new FileModel(filename, url);
+                    }).collect(Collectors.toList());
+
+
+                    urlFotoFrente = obtenerRuta(fileInfos, nomFileFinal1);
+                    urlFotoDorso = obtenerRuta(fileInfos, nomFileFinal2);
+                    //////////////////////////////FIN URL ARCHIVOS////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
                 ////GRABO LOS DATOS EN LA BASE
+                cli.setIdfotoFrente(urlFotoFrente);
+                cli.setIdfotoDorso(urlFotoDorso);
                 a1 =  service.createPersona(cli);
                 logger.info("DIO DE ALTAL AL CLIENTE");
                 padre.setPersona(a1);
@@ -392,5 +430,22 @@ public class PersonaController
             return ""; // empty extension
         }
         return namefile.substring(lastIndexOf);
+    }
+
+
+
+
+    public String obtenerRuta(List<FileModel> lista, String nameFile)
+    {
+        String url="";
+        for (FileModel info:lista)
+        {
+            if (nameFile.equals(info.getName()))
+            {
+                url = info.getUrl();
+                break;
+            }
+        }
+        return url;
     }
 }
