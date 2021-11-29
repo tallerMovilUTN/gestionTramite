@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-@CrossOrigin( origins = "*" , methods = { RequestMethod. GET , RequestMethod. POST })
+@CrossOrigin( origins = "*" , methods = { RequestMethod. GET , RequestMethod. POST,RequestMethod.PUT })
 @RestController
 @RequestMapping(value = "/personas")
 public class PersonaController
@@ -81,6 +81,20 @@ public class PersonaController
             return ResponseEntity.notFound().build();
         }
         logger.info("ESTOY EN getCliente-"+cat.getApellido());
+
+        return ResponseEntity.ok(cat);
+    }
+
+
+    @GetMapping(value = "/getPersonaPorDni/{dni}")
+    public ResponseEntity<Persona> getPersona(@PathVariable("dni") int dni)
+    {
+        logger.info("ESTOY EN getPersona-"+dni);
+        Persona cat =  service.getPersonaPorDni(dni);
+        if (null==cat){
+            return ResponseEntity.notFound().build();
+        }
+        logger.info("ESTOY EN getPersonaPorDni-"+cat.getApellido());
 
         return ResponseEntity.ok(cat);
     }

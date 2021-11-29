@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin( origins = "*" , methods = { RequestMethod. GET , RequestMethod. POST })
+@CrossOrigin( origins = "*" , methods = { RequestMethod. GET , RequestMethod. POST,RequestMethod.PUT })
 @RestController
 @RequestMapping(value = "/contactos")
 public class ContactoController

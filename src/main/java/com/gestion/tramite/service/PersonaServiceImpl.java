@@ -47,6 +47,12 @@ public class PersonaServiceImpl implements PersonaService
         return repo.findById(id).orElse(null);
     }
 
+
+    @Override
+    public Persona getPersonaPorDni(int dni) {
+        return repo.findByDni(dni);
+    }
+
     @Override
     public Persona createPersona(Persona a1) {
         a1.setEstado(1);

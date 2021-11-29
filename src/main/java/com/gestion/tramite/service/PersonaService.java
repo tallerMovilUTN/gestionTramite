@@ -17,4 +17,5 @@ public interface PersonaService {
     public Persona deletePersona(Long id);
     public void borrarPersona(Long id);
     public Resource load(String filename,String carpeta);
+    public Persona getPersonaPorDni (int dni);
 }
