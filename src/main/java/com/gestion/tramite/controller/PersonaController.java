@@ -38,6 +38,7 @@ public class PersonaController
     @Autowired
     PersonaService service;
 
+    @Autowired
     FileService fileService;
 
     @Autowired
@@ -215,7 +216,7 @@ public class PersonaController
             abueloMat = new ObjectMapper().readValue(dabueloMat, Contacto.class);
             abuelaMat = new ObjectMapper().readValue(dabuelaMat, Contacto.class);
 
-            localPath=path+cli.getDni();
+            localPath=path+"/"+cli.getDni();
             logger.info("localPath:: "+localPath);
 
 
@@ -252,7 +253,10 @@ public class PersonaController
 
                     /////////////////////////////OBTENGO LA URL DE LOS ARCHIVOS/////////////////////////////////////////////
                     /////DEBO OBTENER LA URL DEL ARCHIVO SUBIDO
-                    List<FileModel> fileInfos = fileService.loadAll(a1.getDni().toString()).map(path -> {
+
+                    //List<FileModel> fileInfos = fileService.loadAll(a1.getDni().toString()).map(path -> {//PRUEBA DE ERROR
+
+                    List<FileModel> fileInfos = fileService.loadAll(cli.getDni().toString()).map(path -> {
                         String filename = path.getFileName().toString();
                         logger.info("filename: "+filename);
                         String url = MvcUriComponentsBuilder.fromMethodName(FileController.class, "getFile",
