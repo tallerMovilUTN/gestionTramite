@@ -1,6 +1,7 @@
 package com.gestion.tramite.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gestion.tramite.entidad.*;
 import com.gestion.tramite.service.FileService;
 import com.gestion.tramite.service.FileServiceImp;
@@ -82,46 +83,59 @@ public class FileController {
 
 
 
-    @PostMapping("/upload")
-    public ResponseEntity<Archivo> uploadFile(@RequestParam("file")MultipartFile file, @RequestPart("archivo") Archivo a1)
+
+    @RequestMapping(value = "/upload",method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Archivo> uploadFile(@RequestParam("file")MultipartFile file, @RequestPart("archivo") String archivo)
     {
-
-        String nomFileFinal = fileService.upload(file,a1);
-        String urlFile="";
-
-        if (nomFileFinal.length() > 0)///se subio OK el archivo
+        logger.info("ESTOY EN UPLOAD FILE");
+        try
         {
+                logger.info("JSON(Archivo):: "+archivo);
+                Archivo a1 = new ObjectMapper().readValue(archivo, Archivo.class);
+                String nomFileFinal = fileService.upload(file,a1);
+                String urlFile="";
 
-            /////DEBO OBTENER LA URL DEL ARCHIVO SUBIDO
-            List<FileModel> fileInfos = fileService.loadAll(a1.getDni().toString()).map(path -> {
-                String filename = path.getFileName().toString();
-                logger.info("filename: "+filename);
-                String url = MvcUriComponentsBuilder.fromMethodName(FileController.class, "getFile",
-                        path.getFileName().toString()).build().toString();
-                return new FileModel(filename, url);
-            }).collect(Collectors.toList());
-
-
-            urlFile="";
-            for (FileModel info:fileInfos)
-            {
-                if (nomFileFinal.equals(info.getName()))
+                if (nomFileFinal.length() > 0)///se subio OK el archivo
                 {
-                    urlFile = info.getUrl();
-                    break;
+
+                    /////DEBO OBTENER LA URL DEL ARCHIVO SUBIDO
+                    List<FileModel> fileInfos = fileService.loadAll(a1.getDni().toString()).map(path -> {
+                        String filename = path.getFileName().toString();
+                        logger.info("filename: "+filename);
+                        String url = MvcUriComponentsBuilder.fromMethodName(FileController.class, "getFile",
+                                path.getFileName().toString()).build().toString();
+                        return new FileModel(filename, url);
+                    }).collect(Collectors.toList());
+
+
+                    urlFile="";
+                    for (FileModel info:fileInfos)
+                    {
+                        if (nomFileFinal.equals(info.getName()))
+                        {
+                            urlFile = info.getUrl();
+                            break;
+                        }
+                    }
+
                 }
-            }
 
+                a1.setNombre(nomFileFinal);
+                a1.setUrl(urlFile);
+                Archivo res =  fileService.save(a1);
+                if (res == null)
+                {
+                    return ResponseEntity.notFound().build();
+                }
+                return ResponseEntity.ok(res);
         }
-
-        a1.setNombre(nomFileFinal);
-        a1.setUrl(urlFile);
-        Archivo res =  fileService.save(a1);
-        if (res == null)
+        catch (Exception e)
         {
-            return ResponseEntity.notFound().build();
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(res);
+
+
     }
 
 
