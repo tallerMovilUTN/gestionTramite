@@ -5,6 +5,7 @@ import com.gestion.tramite.entidad.Persona;
 import com.gestion.tramite.repositorio.ContactoRepositorio;
 import com.gestion.tramite.repositorio.PersonaRepositorio;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContactoServiceImpl implements ContactoService
 {
+    @Autowired
     private final ContactoRepositorio repo;
 
 

@@ -5,8 +5,24 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import java.util.Arrays;
 
 /**
 
@@ -42,17 +58,70 @@ public class ServicioGestionTramiteApplication extends SpringBootServletInitiali
 	}
 
 
-	/**@EnableWebSecurity
+	/**@Configuration
+	public class WebConfig extends WebMvcConfigurerAdapter {
+
+		@Override
+		public void addCorsMappings(CorsRegistry registry) {
+			registry.addMapping("/**")
+					.allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
+		}
+	}**/
+
+
 	@Configuration
-	class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+//@Profile(PROFILE_DEV)
+	public class CorsConfiguration {
+
+		@Bean
+		public WebMvcConfigurer corsConfigurer() {
+			return new WebMvcConfigurer() {
+				@Override
+				public void addCorsMappings(CorsRegistry registry) {
+					registry.addMapping("/**")
+							.allowedOrigins("*")
+							.allowedHeaders("*")
+							.allowedMethods("*");
+				}
+			};
+		}
+	}
+
+
+	@EnableWebSecurity
+	@Configuration
+	class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+		@Override
+		public void configure(WebSecurity web) throws Exception {
+			web.ignoring()
+					//others if you need
+					.antMatchers(HttpMethod.OPTIONS, "/**");
+
+		}
 
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.csrf().disable()
 					.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 					.authorizeRequests()
-					.antMatchers(HttpMethod.POST, "/user").permitAll()
+					.antMatchers(HttpMethod.POST, "/usuario").permitAll()
 					.anyRequest().authenticated();
+			http.cors();
+
 		}
-	}***/
+
+
+	}
+
+
+	/**@Configuration
+	@EnableWebMvc
+	public class SpringConfig implements WebMvcConfigurer {
+
+		@Override
+		public void addCorsMappings(CorsRegistry registry) {
+			registry.addMapping("/**").allowedOrigins("http://localhost:4200");
+		}
+	}**/
 }
