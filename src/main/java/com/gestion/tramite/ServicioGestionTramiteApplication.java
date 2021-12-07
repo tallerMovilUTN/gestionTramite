@@ -94,9 +94,8 @@ public class ServicioGestionTramiteApplication extends SpringBootServletInitiali
 
 		@Override
 		public void configure(WebSecurity web) throws Exception {
-			web.ignoring()
-					//others if you need
-					.antMatchers(HttpMethod.OPTIONS, "/**");
+			web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
+			web.ignoring().antMatchers("/fileController/**");
 
 		}
 
@@ -106,8 +105,14 @@ public class ServicioGestionTramiteApplication extends SpringBootServletInitiali
 					.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 					.authorizeRequests()
 					.antMatchers(HttpMethod.POST, "/usuario").permitAll()
+					.antMatchers(HttpMethod.POST, "/contactos").permitAll()
+					.antMatchers(HttpMethod.POST, "/documentos").permitAll()
+					.antMatchers(HttpMethod.POST, "/gestionTramites").permitAll()
+					.antMatchers(HttpMethod.POST, "/personas").permitAll()
+					.antMatchers(HttpMethod.POST, "/tramites").permitAll()
 					.anyRequest().authenticated();
 			http.cors();
+
 
 		}
 
