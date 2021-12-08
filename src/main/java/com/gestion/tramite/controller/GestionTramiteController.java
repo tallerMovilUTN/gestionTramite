@@ -1,14 +1,17 @@
 package com.gestion.tramite.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gestion.tramite.entidad.Contacto;
 import com.gestion.tramite.entidad.GestionTramite;
+import com.gestion.tramite.entidad.Persona;
 import com.gestion.tramite.service.ContactoService;
 import com.gestion.tramite.service.GestionTramiteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,11 +52,29 @@ public class GestionTramiteController
     }
 
 
-    @PostMapping
-    public ResponseEntity<GestionTramite> createGestionTramite(@RequestBody GestionTramite a1)
+    @PostMapping( consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<GestionTramite> createGestionTramite(@RequestPart("gestionTramite") String gestionTramite)
     {
-        GestionTramite tra =  service.createGestionTramite(a1);
-        return ResponseEntity.status(HttpStatus.CREATED).body(tra);
+        logger.info("ESTOY EN CREATE GESTION TRAMITE");
+
+        GestionTramite a1 = null;
+        try
+        {
+                logger.info("JSON(gestionTramite):: "+gestionTramite);
+                a1 = new ObjectMapper().readValue(gestionTramite, GestionTramite.class);
+                logger.info("PERSONA(Id): "+a1.getPersona().getId());
+                logger.info("PERSONA(dNI): "+a1.getPersona().getDni());
+                logger.info("PERSONA(APELLIDO ): "+a1.getPersona().getApellido()+" "+ a1.getPersona().getNombre());
+                GestionTramite tra =  service.createGestionTramite(a1);
+                return ResponseEntity.status(HttpStatus.CREATED).body(tra);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
     }
 
 
