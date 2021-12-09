@@ -52,5 +52,7 @@ public interface FileService {
     /*
     Metodo para Borrar un archivo
      */
-    public boolean deleteFile(Archivo archivo);
+    public Archivo deleteFile(Long id);
+
+    public Archivo getArchivo(Long id);
 }
