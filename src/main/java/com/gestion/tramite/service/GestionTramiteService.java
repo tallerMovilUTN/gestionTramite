@@ -13,5 +13,5 @@ public interface GestionTramiteService {
     public GestionTramite createGestionTramite(GestionTramite a1);
     public GestionTramite updateGestionTramite(GestionTramite a1);
     public GestionTramite deleteGestionTramite(Long id);
-    public void borrarGestionTramite(Long id);
+    public GestionTramite borrarGestionTramite(Long id);
 }

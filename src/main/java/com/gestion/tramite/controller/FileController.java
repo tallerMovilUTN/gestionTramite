@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin( origins = "*" , methods = { RequestMethod. GET , RequestMethod. POST })
+@CrossOrigin( origins = "*" , methods = { RequestMethod. GET , RequestMethod. POST , RequestMethod. DELETE })
 @RestController
 @RequestMapping(value = "/fileController")
 public class FileController {
@@ -282,8 +282,13 @@ public class FileController {
         }
     }**/
 
-    @DeleteMapping("/delete")
+
+
+        @DeleteMapping("/delete")
     public boolean deleteFile(@RequestPart("archivo") Archivo archivo) {
+
+
+
         return fileService.deleteFile(archivo);
 
     }
