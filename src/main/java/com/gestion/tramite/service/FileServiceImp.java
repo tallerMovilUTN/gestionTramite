@@ -1,6 +1,7 @@
 package com.gestion.tramite.service;
 
 import com.gestion.tramite.entidad.Archivo;
+import com.gestion.tramite.entidad.Documento;
 import com.gestion.tramite.repositorio.FileRepositorio;
 import com.gestion.tramite.util.Util;
 import lombok.RequiredArgsConstructor;
@@ -165,6 +166,12 @@ public class FileServiceImp implements FileService {
     }**/
 
 
+  @Override
+  public Archivo getArchivo(Long id) {
+      return repo.findById(id).orElse(null);
+  }
+
+
 
     @Override
     public Stream<Path> loadAll(String carpeta)
@@ -232,6 +239,16 @@ public class FileServiceImp implements FileService {
 
 
     @Override
+    public Archivo deleteFile(Long id){
+
+
+        Archivo a1= getArchivo(id);
+
+        repo.delete(a1);
+
+        return a1;
+    }
+/*
     public boolean deleteFile(Archivo a1){
 
         boolean result= false;
@@ -246,8 +263,8 @@ public class FileServiceImp implements FileService {
 
             if (Files.deleteIfExists(auxPath.resolve(a1.getNombre())))
             {
-                    repo.delete(a1);
-                    result = true;
+                repo.delete(a1);
+                result = true;
             }
 
 
@@ -257,7 +274,7 @@ public class FileServiceImp implements FileService {
 
         }
         return result;
-    }
+    }*/
 
 
 }

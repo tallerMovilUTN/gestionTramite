@@ -58,9 +58,16 @@ public class GestionTramiteServiceImpl implements GestionTramiteService
     }
 
     @Override
-    public void borrarGestionTramite(Long id) {
+    public GestionTramite borrarGestionTramite(Long id) {
         GestionTramite a1 = getGestionTramite(id);
+
+        if (null == a1){
+            return null;
+        }
+
         repo.delete(a1);
+
+        return a1;
     }
 
 

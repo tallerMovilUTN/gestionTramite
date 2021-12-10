@@ -92,7 +92,7 @@ public class GestionTramiteController
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<GestionTramite> deleteGestionTramite(@PathVariable("id") Long id){
-        GestionTramite cliDel = service.deleteGestionTramite(id);
+        GestionTramite cliDel = service.borrarGestionTramite(id);
         if (cliDel == null)
         {
             return ResponseEntity.notFound().build();

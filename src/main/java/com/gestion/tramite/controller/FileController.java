@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin( origins = "*" , methods = { RequestMethod. GET , RequestMethod. POST })
+@CrossOrigin( origins = "*" , methods = { RequestMethod. GET , RequestMethod. POST , RequestMethod. DELETE })
 @RestController
 @RequestMapping(value = "/fileController")
 public class FileController {
@@ -281,13 +281,35 @@ public class FileController {
         }
     }**/
 
-    @DeleteMapping("/delete")
+
+
+     /*   @DeleteMapping("/delete")
     public boolean deleteFile(@RequestPart("archivo") Archivo archivo) {
+
+            logger.info("ESTOY EN deleteFile ");
+
         return fileService.deleteFile(archivo);
 
     }
+*/
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Archivo>  deleteFile(@PathVariable("id") Long id){
 
+        System.out.println("estoy en deleteArchivo");
+
+        Archivo cliDel= fileService.deleteFile(id);
+
+        System.out.println("estoy en deleteArchivo 2");
+        if (cliDel == null)
+        {
+            return ResponseEntity.notFound().build();
+        }
+
+        System.out.println("estoy en deleteArchivo 3");
+
+        return ResponseEntity.ok(cliDel);
+    }
 
 
 
