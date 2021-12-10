@@ -26,9 +26,9 @@ public class ContactoServiceImpl implements ContactoService
     }
 
     @Override
-    public List<Contacto> getContactos(Long idPersona)
+    public List<Contacto> getContactosByIdPersona(Long idPersona)
     {
-        return repo.getContactos(idPersona);
+        return repo.getContactosByIdPersona(idPersona);
     }
 
     @Override
@@ -65,6 +65,17 @@ public class ContactoServiceImpl implements ContactoService
         Contacto contacto = getContacto(id);
         repo.delete(contacto);
 
+    }
+
+    @Override
+    public void borrarContactoByIdPersona(Long idPersona)
+    {
+
+        List<Contacto> contactos = this.getContactosByIdPersona(idPersona);
+        for (Contacto contact:contactos)
+        {
+            repo.delete(contact);
+        }
     }
 
 

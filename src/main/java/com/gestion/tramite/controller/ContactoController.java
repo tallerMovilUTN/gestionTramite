@@ -46,7 +46,7 @@ public class ContactoController
     public ResponseEntity<List<Contacto>> getContactos(@PathVariable("idPersona") Long idPersona)
     {
         logger.info("ESTOY EN getContacto-"+idPersona);
-        List<Contacto> result = service.getContactos(idPersona);
+        List<Contacto> result = service.getContactosByIdPersona(idPersona);
         if (result.isEmpty()){
             return ResponseEntity.noContent().build();
         }

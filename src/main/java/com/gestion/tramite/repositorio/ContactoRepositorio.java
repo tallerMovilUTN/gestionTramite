@@ -12,7 +12,7 @@ import java.util.List;
 public interface ContactoRepositorio extends JpaRepository<Contacto, Long> {
 //Integer id
     @Query("select c from Contacto c where c.persona.id = :idPersona")
-    public List<Contacto> getContactos(@Param("idPersona") Long idPersona);
+    public List<Contacto> getContactosByIdPersona(@Param("idPersona") Long idPersona);
 
 
 

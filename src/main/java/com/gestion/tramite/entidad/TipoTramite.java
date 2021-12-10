@@ -13,7 +13,7 @@ import java.util.Date;
 public class TipoTramite
 {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO,generator="native")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GenericGenerator(name = "native",strategy = "native")
     private Long id;
     private String tipo;

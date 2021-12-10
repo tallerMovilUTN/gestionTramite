@@ -268,21 +268,28 @@ public class PersonaController
                     urlFotoFrente = obtenerRuta(fileInfos, nomFileFinal1);
                     urlFotoDorso = obtenerRuta(fileInfos, nomFileFinal2);
                     //////////////////////////////FIN URL ARCHIVOS////////////////////////////////////
-
-
-
-
-
-
-
-
+                logger.info("urlFotoFrente::"+urlFotoFrente);
+                logger.info("urlFotoDorso::"+urlFotoDorso);
 
 
                 ////GRABO LOS DATOS EN LA BASE
                 cli.setIdfotoFrente(urlFotoFrente);
                 cli.setIdfotoDorso(urlFotoDorso);
-                a1 =  service.createPersona(cli);
-                logger.info("DIO DE ALTAL AL CLIENTE");
+
+                Persona existePer=service.getPersona(cli.getId());
+                if (Objects.nonNull(existePer))/////ES UNA MODIFICACION
+                {
+                    ////DEBO BORRAR LOS CONCTACTO Y ACTUALIZAR LA IMAGEN y el CLIENTE
+                    logger.info("ES UNA ACTUALIZACION DE CLIENTE:: "+cli.getId()+"; DNI: "+cli.getDni());
+                    a1 = service.updatePersona(cli);
+                    ///DEBO BORRAR TODOS LOS CONTACTOS CARGADOS PARA EL ID
+                    serContacto.borrarContactoByIdPersona(cli.getId());
+                }
+                else////ES UN ALTA DE CLIENTE
+                {
+                        a1 =  service.createPersona(cli);
+                        logger.info("DIO DE ALTAL AL CLIENTE");
+                }//////if (Objects.nonNull(existePer))/
                 padre.setPersona(a1);
                 madre.setPersona(a1);
                 abueloPat.setPersona(a1);
@@ -307,16 +314,18 @@ public class PersonaController
                 ablaMat =  serContacto.createContacto(abuelaMat);
 
                 if ((Objects.isNull(pa)) &&
-                   (Objects.isNull(ma)) &&
-                   (Objects.isNull(abloPat)) &&
-                   (Objects.isNull(ablaPat)) &&
-                   (Objects.isNull(abloMat)) &&
-                   (Objects.isNull(ablaMat)))
+                        (Objects.isNull(ma)) &&
+                        (Objects.isNull(abloPat)) &&
+                        (Objects.isNull(ablaPat)) &&
+                        (Objects.isNull(abloMat)) &&
+                        (Objects.isNull(ablaMat)))
                 {
                     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
-
                 return ResponseEntity.status(HttpStatus.CREATED).body(a1);
+
+
+
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 

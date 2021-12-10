@@ -55,6 +55,7 @@ public class PersonaServiceImpl implements PersonaService
 
     @Override
     public Persona createPersona(Persona a1) {
+        //if (a1.getId() > 0)///VERIFICO SI EXISTE
         a1.setEstado(1);
         a1.setFechaAlta(new Date());
         return repo.save(a1);
@@ -62,14 +63,7 @@ public class PersonaServiceImpl implements PersonaService
 
     @Override
     public Persona updatePersona(Persona a1) {
-        Persona catDB = getPersona(a1.getId());
-        if (null == catDB){
-            return null;
-        }
-        //catDB.setDescripcion(a1.getDescripcion());
-        catDB.setEstado(a1.getEstado());
-
-        return repo.save(catDB);
+        return repo.save(a1);
     }
 
     @Override
