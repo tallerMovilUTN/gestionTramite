@@ -110,6 +110,7 @@ public class ServicioGestionTramiteApplication extends SpringBootServletInitiali
 					.antMatchers(HttpMethod.POST, "/gestionTramites").permitAll()
 					.antMatchers(HttpMethod.POST, "/personas").permitAll()
 					.antMatchers(HttpMethod.POST, "/tramites").permitAll()
+					.antMatchers(HttpMethod.POST, "/sendMail").permitAll()
 					.anyRequest().authenticated();
 			http.cors();
 

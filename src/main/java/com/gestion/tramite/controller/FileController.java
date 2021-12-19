@@ -296,18 +296,14 @@ public class FileController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Archivo>  deleteFile(@PathVariable("id") Long id){
 
-        System.out.println("estoy en deleteArchivo");
-
+        logger.info("estoy en deleteArchivo");
         Archivo cliDel= fileService.deleteFile(id);
-
-        System.out.println("estoy en deleteArchivo 2");
+        logger.info("estoy en deleteArchivo 2");
         if (cliDel == null)
         {
             return ResponseEntity.notFound().build();
         }
-
-        System.out.println("estoy en deleteArchivo 3");
-
+        logger.info("estoy en deleteArchivo 3");
         return ResponseEntity.ok(cliDel);
     }
 

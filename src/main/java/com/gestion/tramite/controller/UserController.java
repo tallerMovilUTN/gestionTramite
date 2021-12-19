@@ -26,6 +26,8 @@ public class UserController {
     @Autowired
     private UserService service;
 
+    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+
     //@CrossOrigin(origins = "http://localhost:4200")
     //@PostMapping("user")
     @PostMapping
@@ -72,7 +74,7 @@ public class UserController {
                                 .map(GrantedAuthority::getAuthority)
                                 .collect(Collectors.toList()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 11600000))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(SignatureAlgorithm.HS512,
                         secretKey.getBytes()).compact();
 
