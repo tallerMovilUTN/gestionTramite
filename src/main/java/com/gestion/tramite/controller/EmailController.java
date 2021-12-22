@@ -1,10 +1,6 @@
 package com.gestion.tramite.controller;
 
-import com.gestion.tramite.entidad.Contacto;
 import com.gestion.tramite.entidad.Emails;
-import com.gestion.tramite.entidad.Persona;
-import com.gestion.tramite.entidad.dto.EmailDTO;
-import com.gestion.tramite.service.ContactoService;
 import com.gestion.tramite.service.EmailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,17 +27,12 @@ public class EmailController {
     Logger logger = LoggerFactory.getLogger(EmailController.class);
 
     @PostMapping
-    public ResponseEntity<String> sendEmail(@RequestBody EmailDTO emailDTO, @RequestBody Persona persona) {
+    public ResponseEntity<String> sendEmail(@RequestBody Emails email) {
         try
         {
             logger.info("ESTOY EN SEND MAIL");
-            logger.info("MENSAJE A ENVIAR:: "+emailDTO);
-            sendmail(emailDTO);
-            Emails email = new Emails();
-            email.setPersona(persona);
-            email.setTo(emailDTO.getTo());
-            email.setSubject(emailDTO.getSubject());
-            email.setMsg(email.getMsg());
+            logger.info("MENSAJE A ENVIAR:: "+email);
+            sendmail(email);
             service.createEmail(email);
             //return "OK";
             return new ResponseEntity<>("OK", HttpStatus.OK);
@@ -85,7 +76,7 @@ public class EmailController {
 
 
 
-    private void sendmail(EmailDTO emailDTO) throws AddressException, MessagingException, IOException
+    private void sendmail(Emails emailDTO) throws AddressException, MessagingException, IOException
     {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

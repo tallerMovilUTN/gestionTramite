@@ -178,16 +178,13 @@ public class PersonaController
                          @RequestPart("abueloPat") String dabueloPat,
                          @RequestPart("abuelaPat") String dabuelaPat,
                          @RequestPart("abueloMat") String dabueloMat,
-                         @RequestPart("abuelaMat") String dabuelaMat
-                         )
+                         @RequestPart("abuelaMat") String dabuelaMat)
 
     {
         logger.info("ESTOY EN upload");
-        logger.info("NOMBRE ARCHIVO_"+fotoFrente.getOriginalFilename());
-        String extFotoFrente = getFileExtension(fotoFrente.getOriginalFilename());
-        String extFotoDorso = getFileExtension(fotoDorso.getOriginalFilename());
-        logger.info("EXTENSION ARCHIVO_FOTO_FRENTE:: "+extFotoFrente);
-        logger.info("EXTENSION ARCHIVO_FOTO_DORSO:: "+extFotoDorso);
+
+
+
 
 
         logger.info("JSON(PERSONA):: "+dPersona);
@@ -206,7 +203,9 @@ public class PersonaController
 
 
         String localPath=null,nomFileFinal1=null,nomFileFinal2=null;
-
+        boolean band1,band2;
+        band1 = true;
+        band2 = true;
         try {
             cli = new ObjectMapper().readValue(dPersona, Persona.class);
             padre = new ObjectMapper().readValue(dPadre, Contacto.class);
@@ -216,11 +215,15 @@ public class PersonaController
             abueloMat = new ObjectMapper().readValue(dabueloMat, Contacto.class);
             abuelaMat = new ObjectMapper().readValue(dabuelaMat, Contacto.class);
 
+
+            logger.info("NOMBRE ARCHIVO_"+fotoFrente.getOriginalFilename());
+            String extFotoFrente = getFileExtension(fotoFrente.getOriginalFilename());
+            String extFotoDorso = getFileExtension(fotoDorso.getOriginalFilename());
+            logger.info("EXTENSION ARCHIVO_FOTO_FRENTE:: "+extFotoFrente);
+            logger.info("EXTENSION ARCHIVO_FOTO_DORSO:: "+extFotoDorso);
+
             localPath=path+"/"+cli.getDni();
             logger.info("localPath:: "+localPath);
-
-
-
             File direc= new File(localPath);
             if (!direc.exists())
             {
@@ -238,11 +241,10 @@ public class PersonaController
             logger.info("nomFileFOTO1: "+nomFileFinal1);
             logger.info("nomFileFOTO2: "+nomFileFinal2);
             logger.info("APELLIDO: "+cli.getApellido()+" "+cli.getNombre());
-            boolean band1 = FileUtils.upload(fotoFrente, localPath, nomFileFinal1);
-            boolean band2 = FileUtils.upload(fotoDorso, localPath, nomFileFinal2);
+            band1 = FileUtils.upload(fotoFrente, localPath, nomFileFinal1);
+            band2 = FileUtils.upload(fotoDorso, localPath, nomFileFinal2);
             cli.setIdfotoFrente(nomFileFinal1);
             cli.setIdfotoDorso(nomFileFinal2);
-
 
 
             String urlFotoFrente="";
@@ -253,76 +255,77 @@ public class PersonaController
 
                     /////////////////////////////OBTENGO LA URL DE LOS ARCHIVOS/////////////////////////////////////////////
                     /////DEBO OBTENER LA URL DEL ARCHIVO SUBIDO
-
-                    //List<FileModel> fileInfos = fileService.loadAll(a1.getDni().toString()).map(path -> {//PRUEBA DE ERROR
-
-                    List<FileModel> fileInfos = fileService.loadAll(cli.getDni().toString()).map(path -> {
-                        String filename = path.getFileName().toString();
-                        logger.info("filename: "+filename);
-                        String url = MvcUriComponentsBuilder.fromMethodName(FileController.class, "getFile",
-                                path.getFileName().toString()).build().toString();
-                        return new FileModel(filename, url);
-                    }).collect(Collectors.toList());
+                        List<FileModel> fileInfos = fileService.loadAll(cli.getDni().toString()).map(path -> {
+                            String filename = path.getFileName().toString();
+                            logger.info("filename: "+filename);
+                            String url = MvcUriComponentsBuilder.fromMethodName(FileController.class, "getFile",
+                                    path.getFileName().toString()).build().toString();
+                            return new FileModel(filename, url);
+                        }).collect(Collectors.toList());
 
 
-                    urlFotoFrente = obtenerRuta(fileInfos, nomFileFinal1);
-                    urlFotoDorso = obtenerRuta(fileInfos, nomFileFinal2);
-                    //////////////////////////////FIN URL ARCHIVOS////////////////////////////////////
-                logger.info("urlFotoFrente::"+urlFotoFrente);
-                logger.info("urlFotoDorso::"+urlFotoDorso);
+                        urlFotoFrente = obtenerRuta(fileInfos, nomFileFinal1);
+                        urlFotoDorso = obtenerRuta(fileInfos, nomFileFinal2);
+                        //////////////////////////////FIN URL ARCHIVOS////////////////////////////////////
+                        logger.info("urlFotoFrente::"+urlFotoFrente);
+                        logger.info("urlFotoDorso::"+urlFotoDorso);
 
 
-                ////GRABO LOS DATOS EN LA BASE
-                cli.setIdfotoFrente(urlFotoFrente);
-                cli.setIdfotoDorso(urlFotoDorso);
-
-                Persona existePer=service.getPersona(cli.getId());
-                if (Objects.nonNull(existePer))/////ES UNA MODIFICACION
-                {
-                    ////DEBO BORRAR LOS CONCTACTO Y ACTUALIZAR LA IMAGEN y el CLIENTE
-                    logger.info("ES UNA ACTUALIZACION DE CLIENTE:: "+cli.getId()+"; DNI: "+cli.getDni());
-                    a1 = service.updatePersona(cli);
-                    ///DEBO BORRAR TODOS LOS CONTACTOS CARGADOS PARA EL ID
-                    serContacto.borrarContactoByIdPersona(cli.getId());
-                }
-                else////ES UN ALTA DE CLIENTE
-                {
-                        a1 =  service.createPersona(cli);
-                        logger.info("DIO DE ALTAL AL CLIENTE");
-                }//////if (Objects.nonNull(existePer))/
-                padre.setPersona(a1);
-                madre.setPersona(a1);
-                abueloPat.setPersona(a1);
-                abuelaPat.setPersona(a1);
-                abueloMat.setPersona(a1);
-                abuelaMat.setPersona(a1);
+                        ////GRABO LOS DATOS EN LA BASE
+                        cli.setIdfotoFrente(urlFotoFrente);
+                        cli.setIdfotoDorso(urlFotoDorso);
 
 
 
-                logger.info("padre: "+padre.getApellido()+" "+padre.getNombre());
-                logger.info("tipoRel: "+padre.getTipoRelacion().getDescripcion());
 
 
-                pa =  serContacto.createContacto(padre);
-                logger.info("DIO DE ALTA EL PADRE");
-                ma =  serContacto.createContacto(madre);
+                        Persona existePer=service.getPersona(cli.getId());
+                        if (Objects.nonNull(existePer))/////ES UNA MODIFICACION
+                        {
+                            ////DEBO BORRAR LOS CONCTACTO Y ACTUALIZAR LA IMAGEN y el CLIENTE
+                            logger.info("ES UNA ACTUALIZACION DE CLIENTE:: "+cli.getId()+"; DNI: "+cli.getDni());
+                            a1 = service.updatePersona(cli);
+                            ///DEBO BORRAR TODOS LOS CONTACTOS CARGADOS PARA EL ID
+                            serContacto.borrarContactoByIdPersona(cli.getId());
+                        }
+                        else////ES UN ALTA DE CLIENTE
+                        {
+                                a1 =  service.createPersona(cli);
+                                logger.info("DIO DE ALTAL AL CLIENTE");
+                        }//////if (Objects.nonNull(existePer))/
+                        padre.setPersona(a1);
+                        madre.setPersona(a1);
+                        abueloPat.setPersona(a1);
+                        abuelaPat.setPersona(a1);
+                        abueloMat.setPersona(a1);
+                        abuelaMat.setPersona(a1);
 
-                abloPat =  serContacto.createContacto(abueloPat);
-                ablaPat =  serContacto.createContacto(abuelaPat);
 
-                abloMat =  serContacto.createContacto(abueloMat);
-                ablaMat =  serContacto.createContacto(abuelaMat);
 
-                if ((Objects.isNull(pa)) &&
-                        (Objects.isNull(ma)) &&
-                        (Objects.isNull(abloPat)) &&
-                        (Objects.isNull(ablaPat)) &&
-                        (Objects.isNull(abloMat)) &&
-                        (Objects.isNull(ablaMat)))
-                {
-                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-                }
-                return ResponseEntity.status(HttpStatus.CREATED).body(a1);
+                        logger.info("padre: "+padre.getApellido()+" "+padre.getNombre());
+                        logger.info("tipoRel: "+padre.getTipoRelacion().getDescripcion());
+
+
+                        pa =  serContacto.createContacto(padre);
+                        logger.info("DIO DE ALTA EL PADRE");
+                        ma =  serContacto.createContacto(madre);
+
+                        abloPat =  serContacto.createContacto(abueloPat);
+                        ablaPat =  serContacto.createContacto(abuelaPat);
+
+                        abloMat =  serContacto.createContacto(abueloMat);
+                        ablaMat =  serContacto.createContacto(abuelaMat);
+
+                        if ((Objects.isNull(pa)) &&
+                                (Objects.isNull(ma)) &&
+                                (Objects.isNull(abloPat)) &&
+                                (Objects.isNull(ablaPat)) &&
+                                (Objects.isNull(abloMat)) &&
+                                (Objects.isNull(ablaMat)))
+                        {
+                            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                        }
+                        return ResponseEntity.status(HttpStatus.CREATED).body(a1);
 
 
 
