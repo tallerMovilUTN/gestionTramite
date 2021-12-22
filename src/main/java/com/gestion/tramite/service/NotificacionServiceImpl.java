@@ -41,7 +41,7 @@ public class NotificacionServiceImpl implements NotificacionService{
         }
         notiBD.setTipoNotificacion(a1.getTipoNotificacion());
         notiBD.setMensaje(a1.getMensaje());
-        notiBD.setTipoTramite(a1.getTipoTramite());
+        notiBD.setGestionTramite(a1.getGestionTramite());
         notiBD.setTiempo(a1.getTiempo());
         notiBD.setEstado(a1.getEstado());
         return notiBD;
