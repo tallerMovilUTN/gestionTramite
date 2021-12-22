@@ -1,6 +1,7 @@
 package com.gestion.tramite.entidad;
 
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
@@ -22,9 +23,9 @@ public class Notificacion {
     private Integer estado;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idTipoTramite")
+    @JoinColumn(name = "idGestionTramite")
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-    private TipoTramite tipoTramite;
+    private GestionTramite gestionTramite;
 
 
     @OneToOne(fetch = FetchType.LAZY)
