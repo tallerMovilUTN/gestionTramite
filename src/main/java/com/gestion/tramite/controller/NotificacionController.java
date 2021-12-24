@@ -2,6 +2,7 @@ package com.gestion.tramite.controller;
 
 
 
+import com.gestion.tramite.entidad.Archivo;
 import com.gestion.tramite.entidad.Notificacion;
 import com.gestion.tramite.service.NotificacionService;
 import com.gestion.tramite.service.TipoNotificacionService;
@@ -89,6 +90,48 @@ public class NotificacionController {
         System.out.println("estoy en deleteNotificacion 3");
 
         return ResponseEntity.ok(cliDel);
+    }
+
+
+    @GetMapping("/notificacionesTiempo")
+    public ResponseEntity<List<Notificacion>> obtenerNotificacionesTiempo()
+    {
+
+        List<Notificacion> listNotificacion = service.obtenerNotificacionesTiempo();
+        /**if (listFile.size() > 0)
+         {
+         ////OBTENGO LA LISTA DE URL Y ARCHIVOS DE LA CARPETA
+         Integer dni= listFile.get(0).getDni();
+         logger.info("dni: "+dni);
+
+         List<FileModel> fileInfos = fileService.loadAll(dni.toString()).map(path -> {
+         String filename = path.getFileName().toString();
+         logger.info("filename: "+filename);
+         String url = MvcUriComponentsBuilder.fromMethodName(FileController.class, "getFile",
+         path.getFileName().toString()).build().toString();
+         return new FileModel(filename, url);
+         }).collect(Collectors.toList());
+
+         logger.info("listFile.size(): "+listFile.size());
+         logger.info("fileInfos.size(): "+fileInfos.size());
+
+         int index =0;
+         for (Archivo arch:listFile)
+         {
+         for (FileModel info:fileInfos)
+         {
+         logger.info("COMPARO: "+arch.getNombre());
+         logger.info("COMPARO: "+info.getName());
+         if (arch.getNombre().equals(info.getName()))
+         {
+         listFile.get(index).setUrl(info.getUrl());
+         break;
+         }
+         }
+         index++;
+         }
+         }**/
+        return ResponseEntity.status(HttpStatus.OK).body(listNotificacion);
     }
 
 }

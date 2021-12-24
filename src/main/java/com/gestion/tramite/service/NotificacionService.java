@@ -7,6 +7,7 @@ import java.util.List;
 public interface NotificacionService {
 
     List<Notificacion> listAllNotificacion();
+    List<Notificacion> obtenerNotificacionesTiempo();
     Notificacion getNotificacion(Long id);
     Notificacion createNotificacion(Notificacion a1);
     Notificacion updateNotificacion(Notificacion a1);

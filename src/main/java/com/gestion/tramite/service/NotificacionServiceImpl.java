@@ -1,5 +1,6 @@
 package com.gestion.tramite.service;
 
+import com.gestion.tramite.entidad.Archivo;
 import com.gestion.tramite.entidad.Notificacion;
 import com.gestion.tramite.entidad.TipoNotificacion;
 import com.gestion.tramite.repositorio.NotificacionRepository;
@@ -57,4 +58,14 @@ public class NotificacionServiceImpl implements NotificacionService{
         repo.delete(notiBD);
         return notiBD;
     }
+
+    @Override
+    public List<Notificacion> obtenerNotificacionesTiempo()
+    {
+
+        List<Notificacion> listNotificacion = repo.getNotificacionesTiempo();
+        return listNotificacion;
+    }
+
+
 }
