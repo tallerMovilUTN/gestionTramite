@@ -12,8 +12,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.fab</groupId>
-	<artifactId>gestionTramite</artifactId>
-	<version>RC1</version>
+	<artifactId>gestionTramiteBack</artifactId>
+	<version>V1</version>
 
 	<packaging>war</packaging>
 
