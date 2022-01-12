@@ -42,6 +42,7 @@ public class GestionTramiteServiceImpl implements GestionTramiteService
         }
         //catDB.setDescripcion(a1.getDescripcion());
         catDB.setEstado(a1.getEstado());
+        catDB.setComentario(a1.getComentario());
 
         return repo.save(catDB);
     }

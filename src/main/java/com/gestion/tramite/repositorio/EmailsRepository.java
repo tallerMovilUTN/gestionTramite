@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface EmailsRepository extends JpaRepository<Emails, Long> {
 
-    @Query("select e from Emails e where e.persona.id = :idPersona order by e.fechaEnvio desc")
-    public List<Emails> getEmailsByIdPersona(@Param("idPersona") Long idPersona);
+    @Query("select e from Emails e where e.gestionTramite.id = :idGestionTramite order by e.fechaEnvio desc")
+    public List<Emails> getEmailsByIdGestionTramite(@Param("idGestionTramite") Long idGestionTramite);
 
 }
