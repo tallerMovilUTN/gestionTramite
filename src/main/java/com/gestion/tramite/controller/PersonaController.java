@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@CrossOrigin( origins = "*" , methods = { RequestMethod. GET , RequestMethod. POST,RequestMethod.PUT })
+@CrossOrigin( origins = "*" , methods = { RequestMethod. GET , RequestMethod. POST,RequestMethod.PUT , RequestMethod.DELETE})
 @RestController
 @RequestMapping(value = "/personas")
 public class PersonaController
@@ -428,6 +428,7 @@ public class PersonaController
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Persona> deletePersona(@PathVariable("id") Long id){
+        logger.info("ESTOY EN DELETE PERSONA_ID: "+id);
         Persona cliDel = service.deletePersona(id);
         if (cliDel == null)
         {

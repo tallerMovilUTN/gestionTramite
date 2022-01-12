@@ -39,7 +39,7 @@ public class PersonaServiceImpl implements PersonaService
 
     @Override
     public List<Persona> listAllCliente() {
-        return repo.findAll();
+        return repo.getPersonasActivas();
     }
 
     @Override
