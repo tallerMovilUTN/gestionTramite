@@ -96,6 +96,7 @@ public class ServicioGestionTramiteApplication extends SpringBootServletInitiali
 		public void configure(WebSecurity web) throws Exception {
 			web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
 			web.ignoring().antMatchers("/fileController/**");
+			web.ignoring().antMatchers("/emailController/**");
 
 		}
 

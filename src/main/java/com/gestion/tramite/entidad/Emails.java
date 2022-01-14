@@ -16,14 +16,13 @@ public class Emails {
     @GeneratedValue(strategy= GenerationType.AUTO,generator="native")
     @GenericGenerator(name = "native",strategy = "native")
     private Long id;
-    private String to;
-    private String subject;
-    private String msg;
+    private String para;
+    private String asunto;
+    private String mensaje;
     private Date fechaEnvio;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idPersona")
+    @JoinColumn(name = "idGestionTramite")
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-    private Persona persona;
-
+    private GestionTramite gestionTramite;
 
 }

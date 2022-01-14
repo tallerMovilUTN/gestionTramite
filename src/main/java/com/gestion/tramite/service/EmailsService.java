@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface EmailsService {
     public List<Emails> listAllEmail();
-    public List<Emails> getEmailsByIdPersona(Long idPersona);
+    public List<Emails> getEmailsByIdGestionTramite(Long idGestionTramite);
     public Emails getEmail(Long id);
     public Emails createEmail(Emails a1);
 

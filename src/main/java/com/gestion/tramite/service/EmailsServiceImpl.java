@@ -23,8 +23,8 @@ public class EmailsServiceImpl implements EmailsService{
     }
 
     @Override
-    public List<Emails> getEmailsByIdPersona(Long idPersona) {
-        return repo.getEmailsByIdPersona(idPersona);
+    public List<Emails> getEmailsByIdGestionTramite(Long idGestionTramite) {
+        return repo.getEmailsByIdGestionTramite(idGestionTramite);
     }
 
     @Override
