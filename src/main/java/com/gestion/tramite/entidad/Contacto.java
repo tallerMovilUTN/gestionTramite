@@ -23,6 +23,9 @@ public class Contacto
     private String lugarNac;
     private Date fechaDefuncion;
     private String lugarDefuncion;
+
+    private String tipoDoc;
+
     private Integer dni;
     private String calleNombre;
     private Integer calleNro;
@@ -37,7 +40,6 @@ public class Contacto
     private Integer estado;
     private String observacion;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idPersona")
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
@@ -47,6 +49,36 @@ public class Contacto
     @JoinColumn(name = "idTipoRelacion")
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     private TipoRelacion tipoRelacion;
+
+    private Date fechaNacDesde;
+    private Date fechaNacHasta;
+    private Date fechaMatDesde;
+    private Date fechaMatHasta;
+    private Date fechaDefDesde;
+    private Date fechaDefHasta;
+    private Integer actaNac;
+    private Integer nroFolioNac;
+    private Integer nroTomoNac;
+    private String ofRegCivilNac;
+    private String ciudadRegCivilNac;
+    private String provRegCivilNac;
+    private String paisRegCivilNac;
+
+    private Integer actaMat;
+    private Integer nroFolioMat;
+    private Integer nroTomoMat;
+    private String ofRegCivilMat;
+    private String ciudadRegCivilMat;
+    private String provRegCivilMat;
+    private String paisRegCivilMat;
+
+    private Integer actaDef;
+    private Integer nroFolioDef;
+    private Integer nroTomoDef;
+    private String ofRegCivilDef;
+    private String ciudadRegCivilDef;
+    private String provRegCivilDef;
+    private String paisRegCivilDef;
 
 
 

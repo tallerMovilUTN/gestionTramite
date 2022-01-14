@@ -1,5 +1,6 @@
 package com.gestion.tramite.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gestion.tramite.entidad.Contacto;
 import com.gestion.tramite.entidad.FileModel;
@@ -286,7 +287,7 @@ public class PersonaController
                             logger.info("ES UNA ACTUALIZACION DE CLIENTE:: "+cli.getId()+"; DNI: "+cli.getDni());
                             a1 = service.updatePersona(cli);
                             ///DEBO BORRAR TODOS LOS CONTACTOS CARGADOS PARA EL ID
-                            serContacto.borrarContactoByIdPersona(cli.getId());
+                            serContacto.borrarContactosByIdPersona(cli.getId());
                         }
                         else////ES UN ALTA DE CLIENTE
                         {
@@ -427,7 +428,8 @@ public class PersonaController
 
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Persona> deletePersona(@PathVariable("id") Long id){
+    public ResponseEntity<Persona> deletePersona(@PathVariable("id") Long id)
+    {
         logger.info("ESTOY EN DELETE PERSONA_ID: "+id);
         Persona cliDel = service.deletePersona(id);
         if (cliDel == null)
@@ -465,4 +467,346 @@ public class PersonaController
         }
         return url;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     *
+     * @return
+     */
+    @ResponseBody
+    //@RequestMapping(value = "/img",method = RequestMethod.POST)
+    @RequestMapping(value = "/arbol",method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Persona> arbol(@RequestParam("fotoFrente") MultipartFile fotoFrente,
+                                         @RequestParam("fotoDorso" )MultipartFile fotoDorso,
+                                         @RequestPart("cliente") String dCliente,
+                                         @RequestPart("contactos") String dContacto)
+
+    {
+        logger.info("ESTOY EN ARBOL GENEALOGICO");
+        String localPath=null,nomFileFinal1=null,nomFileFinal2=null;
+        List<Contacto> contactos=null;
+        boolean band1,band2;
+        band1 = true;
+        band2 = true;
+        try
+        {
+            ObjectMapper mapper = new ObjectMapper();
+            logger.info("JSON(CLIENTE):: "+dCliente);
+            Persona cli = mapper.readValue(dCliente, Persona.class);
+
+
+            contactos = mapper.readValue(dContacto, new TypeReference<List<Contacto>>(){});
+
+
+
+
+
+            logger.info("NOMBRE ARCHIVO_"+fotoFrente.getOriginalFilename());
+            String extFotoFrente = getFileExtension(fotoFrente.getOriginalFilename());
+            String extFotoDorso = getFileExtension(fotoDorso.getOriginalFilename());
+            logger.info("EXTENSION ARCHIVO_FOTO_FRENTE:: "+extFotoFrente);
+            logger.info("EXTENSION ARCHIVO_FOTO_DORSO:: "+extFotoDorso);
+
+            localPath=path+"/"+cli.getDni();
+            logger.info("localPath:: "+localPath);
+            File direc= new File(localPath);
+            if (!direc.exists())
+            {
+                if (direc.mkdirs())
+                {
+                    System.out.println("SE CREO EL DIRECTOTIIO");
+                }
+            }
+
+            Date fechaActual=new Date();
+            System.out.println(Util.getFixedString(fechaActual, "yyyyMMdd-HHmmss"));
+
+            nomFileFinal1= cli.getDni()+"_"+Util.getFixedString(fechaActual, "yyyyMMdd_HHmmss")+"_"+"FotoFrente"+getFileExtension(fotoFrente.getOriginalFilename());
+            nomFileFinal2= cli.getDni()+"_"+Util.getFixedString(fechaActual, "yyyyMMdd_HHmmss")+"_"+"FotoDorso"+getFileExtension(fotoDorso.getOriginalFilename());
+            logger.info("nomFileFOTO1: "+nomFileFinal1);
+            logger.info("nomFileFOTO2: "+nomFileFinal2);
+            logger.info("APELLIDO: "+cli.getApellido()+" "+cli.getNombre());
+            band1 = FileUtils.upload(fotoFrente, localPath, nomFileFinal1);
+            band2 = FileUtils.upload(fotoDorso, localPath, nomFileFinal2);
+            cli.setIdfotoFrente(nomFileFinal1);
+            cli.setIdfotoDorso(nomFileFinal2);
+
+
+            String urlFotoFrente="";
+            String urlFotoDorso="";
+
+            if(band1 && band2)
+            {
+
+                /////////////////////////////OBTENGO LA URL DE LOS ARCHIVOS/////////////////////////////////////////////
+                /////DEBO OBTENER LA URL DEL ARCHIVO SUBIDO
+                List<FileModel> fileInfos = fileService.loadAll(cli.getDni().toString()).map(path -> {
+                    String filename = path.getFileName().toString();
+                    logger.info("filename: "+filename);
+                    String url = MvcUriComponentsBuilder.fromMethodName(FileController.class, "getFile",
+                            path.getFileName().toString()).build().toString();
+                    return new FileModel(filename, url);
+                }).collect(Collectors.toList());
+
+
+                urlFotoFrente = obtenerRuta(fileInfos, nomFileFinal1);
+                urlFotoDorso = obtenerRuta(fileInfos, nomFileFinal2);
+                //////////////////////////////FIN URL ARCHIVOS////////////////////////////////////
+                logger.info("urlFotoFrente::"+urlFotoFrente);
+                logger.info("urlFotoDorso::"+urlFotoDorso);
+
+                ////GRABO LOS DATOS EN LA BASE
+                cli.setIdfotoFrente(urlFotoFrente);
+                cli.setIdfotoDorso(urlFotoDorso);
+
+                Persona existePer=service.getPersona(cli.getId());
+                if (Objects.nonNull(existePer))/////ES UNA MODIFICACION
+                {
+                    ////DEBO BORRAR LOS CONCTACTO Y ACTUALIZAR LA IMAGEN y el CLIENTE
+                    logger.info("ES UNA ACTUALIZACION DE CLIENTE:: "+cli.getId()+"; DNI: "+cli.getDni());
+                    cli = service.updatePersona(cli);
+                    ///DEBO BORRAR TODOS LOS CONTACTOS CARGADOS PARA EL ID
+                    serContacto.borrarContactosByIdPersona(cli.getId());
+                }
+                else////ES UN ALTA DE CLIENTE
+                {
+                    cli =  service.createPersona(cli);
+                    logger.info("DIO DE ALTAL AL CLIENTE");
+                }//////if (Objects.nonNull(existePer))/
+
+
+
+                int index = 0;
+                Long id;
+                for (Contacto conta: contactos)
+                {
+
+                    logger.info("RECORRO CONTACTO:: "+index);
+                    logger.info("APELLIDO y NOMBRE:: "+conta.getApellido()+ " "+conta.getNombre());
+                    logger.info("DNI:: "+conta.getDni());
+                    logger.info("TIPO DOC:: "+conta.getTipoDoc());
+                    logger.info("TIPO RELACION:: "+conta.getTipoRelacion().getId()+" - "+conta.getTipoRelacion().getDescripcion());
+                    conta.setPersona(cli);
+                    id = serContacto.createContacto(conta).getId();
+                    contactos.get(index).setId(id);
+                    index++;
+
+                }
+
+                return ResponseEntity.status(HttpStatus.CREATED).body(cli);
+
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
+
+
+        } catch (Exception e) {
+            logger.error("DIO ERROR");
+            e.printStackTrace();
+            /////////////DEBO HACER UN ROLLBACK///////////////
+            File f1;
+            if (Objects.nonNull(localPath) && Objects.nonNull(nomFileFinal1))
+            {
+                logger.error("PATH: "+localPath+"/"+nomFileFinal1);
+                f1= new File(localPath+"/"+nomFileFinal1);
+                f1.delete();
+            }
+
+            if (Objects.nonNull(localPath) && Objects.nonNull(nomFileFinal2))
+            {
+                f1= new File(localPath+"/"+nomFileFinal2);
+                f1.delete();
+            }
+
+
+
+            for (Contacto conta: contactos)
+            {
+                serContacto.borrarContacto(conta.getId());
+                logger.error("BORRE EL PADRE");
+            }
+
+
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
+
+
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+    /**
+     *
+     * @return
+     */
+    @ResponseBody
+    //@RequestMapping(value = "/img",method = RequestMethod.POST)
+    @RequestMapping(value = "/actualizarCliente",method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Persona> actualizarCliente(@RequestParam("fotoFrente") MultipartFile fotoFrente,
+                                         @RequestParam("fotoDorso" )MultipartFile fotoDorso,
+                                         @RequestPart("cliente") String dCliente)
+
+    {
+        logger.info("%%%%%%%%%%%%%%%%%%%ESTOY EN actualizarCliente");
+        String localPath=null,nomFileFinal1=null,nomFileFinal2=null;
+        boolean band1,band2;
+        band1 = true;
+        band2 = true;
+        try
+        {
+            ObjectMapper mapper = new ObjectMapper();
+            logger.info("JSON(CLIENTE):: "+dCliente);
+            Persona cli = mapper.readValue(dCliente, Persona.class);
+
+
+            logger.info("NOMBRE ARCHIVO_"+fotoFrente.getOriginalFilename());
+            String extFotoFrente = getFileExtension(fotoFrente.getOriginalFilename());
+            String extFotoDorso = getFileExtension(fotoDorso.getOriginalFilename());
+            logger.info("EXTENSION ARCHIVO_FOTO_FRENTE:: "+extFotoFrente);
+            logger.info("EXTENSION ARCHIVO_FOTO_DORSO:: "+extFotoDorso);
+
+            localPath=path+"/"+cli.getDni();
+            logger.info("localPath:: "+localPath);
+            File direc= new File(localPath);
+            if (!direc.exists())
+            {
+                if (direc.mkdirs())
+                {
+                    System.out.println("SE CREO EL DIRECTOTIIO");
+                }
+            }
+
+            Date fechaActual=new Date();
+            System.out.println(Util.getFixedString(fechaActual, "yyyyMMdd-HHmmss"));
+
+            nomFileFinal1= cli.getDni()+"_"+Util.getFixedString(fechaActual, "yyyyMMdd_HHmmss")+"_"+"FotoFrente"+getFileExtension(fotoFrente.getOriginalFilename());
+            nomFileFinal2= cli.getDni()+"_"+Util.getFixedString(fechaActual, "yyyyMMdd_HHmmss")+"_"+"FotoDorso"+getFileExtension(fotoDorso.getOriginalFilename());
+            logger.info("nomFileFOTO1: "+nomFileFinal1);
+            logger.info("nomFileFOTO2: "+nomFileFinal2);
+            logger.info("APELLIDO: "+cli.getApellido()+" "+cli.getNombre());
+            band1 = FileUtils.upload(fotoFrente, localPath, nomFileFinal1);
+            band2 = FileUtils.upload(fotoDorso, localPath, nomFileFinal2);
+            cli.setIdfotoFrente(nomFileFinal1);
+            cli.setIdfotoDorso(nomFileFinal2);
+
+
+            String urlFotoFrente="";
+            String urlFotoDorso="";
+
+            if(band1 && band2)
+            {
+
+                /////////////////////////////OBTENGO LA URL DE LOS ARCHIVOS/////////////////////////////////////////////
+                /////DEBO OBTENER LA URL DEL ARCHIVO SUBIDO
+                List<FileModel> fileInfos = fileService.loadAll(cli.getDni().toString()).map(path -> {
+                    String filename = path.getFileName().toString();
+                    logger.info("filename: "+filename);
+                    String url = MvcUriComponentsBuilder.fromMethodName(FileController.class, "getFile",
+                            path.getFileName().toString()).build().toString();
+                    return new FileModel(filename, url);
+                }).collect(Collectors.toList());
+
+
+                urlFotoFrente = obtenerRuta(fileInfos, nomFileFinal1);
+                urlFotoDorso = obtenerRuta(fileInfos, nomFileFinal2);
+                //////////////////////////////FIN URL ARCHIVOS////////////////////////////////////
+                logger.info("urlFotoFrente::"+urlFotoFrente);
+                logger.info("urlFotoDorso::"+urlFotoDorso);
+
+                ////GRABO LOS DATOS EN LA BASE
+                cli.setIdfotoFrente(urlFotoFrente);
+                cli.setIdfotoDorso(urlFotoDorso);
+
+                Persona existePer=service.getPersona(cli.getId());
+                if (Objects.nonNull(existePer))/////ES UNA MODIFICACION
+                {
+                    ////DEBO BORRAR LOS CONCTACTO Y ACTUALIZAR LA IMAGEN y el CLIENTE
+                    logger.info("ES UNA ACTUALIZACION DE CLIENTE:: "+cli.getId()+"; DNI: "+cli.getDni());
+                    cli.setFechaAlta(existePer.getFechaAlta());
+                    cli = service.updatePersona(cli);
+                    ///DEBO BORRAR TODOS LOS CONTACTOS CARGADOS PARA EL ID
+                    //serContacto.borrarContactoByIdPersona(cli.getId());
+                }
+                else////ES UN ALTA DE CLIENTE
+                {
+                    cli =  service.createPersona(cli);
+                    logger.info("DIO DE ALTAL AL CLIENTE");
+                }//////if (Objects.nonNull(existePer))/
+
+
+                return ResponseEntity.status(HttpStatus.CREATED).body(cli);
+
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
+
+
+        } catch (Exception e) {
+            logger.error("DIO ERROR");
+            e.printStackTrace();
+            /////////////DEBO HACER UN ROLLBACK///////////////
+            File f1;
+            if (Objects.nonNull(localPath) && Objects.nonNull(nomFileFinal1))
+            {
+                logger.error("PATH: "+localPath+"/"+nomFileFinal1);
+                f1= new File(localPath+"/"+nomFileFinal1);
+                f1.delete();
+            }
+
+            if (Objects.nonNull(localPath) && Objects.nonNull(nomFileFinal2))
+            {
+                f1= new File(localPath+"/"+nomFileFinal2);
+                f1.delete();
+            }
+
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 }

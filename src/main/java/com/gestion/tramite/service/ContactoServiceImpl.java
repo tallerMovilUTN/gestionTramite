@@ -40,14 +40,7 @@ public class ContactoServiceImpl implements ContactoService
 
     @Override
     public Contacto updateContacto(Contacto a1) {
-        Contacto catDB = getContacto(a1.getId());
-        if (null == catDB){
-            return null;
-        }
-        //catDB.setDescripcion(a1.getDescripcion());
-        catDB.setEstado(a1.getEstado());
-
-        return repo.save(catDB);
+        return repo.save(a1);
     }
 
     @Override
@@ -65,17 +58,19 @@ public class ContactoServiceImpl implements ContactoService
         Contacto contacto = getContacto(id);
         repo.delete(contacto);
 
+
     }
 
     @Override
-    public void borrarContactoByIdPersona(Long idPersona)
+    public void borrarContactosByIdPersona(Long idPersona)
     {
 
-        List<Contacto> contactos = this.getContactosByIdPersona(idPersona);
+        /**List<Contacto> contactos = this.getContactosByIdPersona(idPersona);
         for (Contacto contact:contactos)
         {
             repo.delete(contact);
-        }
+        }**/
+        repo.borrarContactosByIdPersona(idPersona);
     }
 
 
@@ -84,5 +79,12 @@ public class ContactoServiceImpl implements ContactoService
     public Contacto getContacto(Long id) {
         return repo.findById(id).orElse(null);
     }
+
+
+    @Override
+    public Contacto getContactosByIdPersonaAndTipoRelacion(Long id,Long idTipoRelacion) {
+        return repo.getContactosByIdPersonaAndTipoRelacion(id,idTipoRelacion);
+    }
+
 
 }

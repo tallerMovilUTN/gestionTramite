@@ -17,4 +17,5 @@ public interface PersonaRepositorio extends JpaRepository<Persona, Long> {
     @Query("select p from Persona p where p.estado = 1")
     public List<Persona> getPersonasActivas();
 
+
 }

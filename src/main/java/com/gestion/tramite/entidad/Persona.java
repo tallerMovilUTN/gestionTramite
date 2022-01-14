@@ -20,6 +20,9 @@ public class Persona
     private String email;
     private Date fechaNac;
     private String lugarNac;
+
+    private String tipoDoc;
+
     private Integer dni;
     private String calleNombre;
     private Integer calleNro;
@@ -35,6 +38,15 @@ public class Persona
     private String idfotoDorso;
     private Date fechaAlta;
     private Integer estado;
+
+    private Integer actaNac;
+    private Integer nroFolioNac;
+    private Integer nroTomoNac;
+    private String ofRegCivilNac;
+    private String ciudadRegCivilNac;
+    private String provRegCivilNac;
+    private String paisRegCivilNac;
+
 
 
 
