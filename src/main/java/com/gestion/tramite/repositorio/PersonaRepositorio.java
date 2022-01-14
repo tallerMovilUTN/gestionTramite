@@ -13,6 +13,9 @@ public interface PersonaRepositorio extends JpaRepository<Persona, Long> {
 
     Persona findByDni(int dni);
 
+    @Query("select p from Persona p where p.dni = :dni and p.estado = 1")
+    public Persona getPersonasActivasByDNI(@Param("dni") int dni);
+
 
     @Query("select p from Persona p where p.estado = 1")
     public List<Persona> getPersonasActivas();

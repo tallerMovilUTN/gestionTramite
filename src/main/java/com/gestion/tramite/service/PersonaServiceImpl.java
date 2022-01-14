@@ -50,7 +50,7 @@ public class PersonaServiceImpl implements PersonaService
 
     @Override
     public Persona getPersonaPorDni(int dni) {
-        return repo.findByDni(dni);
+        return repo.getPersonasActivasByDNI(dni);
     }
 
     @Override

@@ -42,8 +42,46 @@ public class UserController {
             user.setPassword(a1.getPassword());
             user.setToken(token);
             service.updateUser(user);
-            //user.setToken("token");
+            return user;
         }
+
+
+        if ((a1.getUser().equals("fbianchini")) && (a1.getPassword().equals("fbia2022")))
+        {
+            String token = getJWTToken(a1.getUser());
+            user = new User();
+            user.setUser(a1.getUser());
+            user.setPassword(a1.getPassword());
+            user.setToken(token);
+            service.updateUser(user);
+            return user;
+        }
+
+
+        if ((a1.getUser().equals("erodriguez")) && (a1.getPassword().equals("erod2022")))
+        {
+            String token = getJWTToken(a1.getUser());
+            user = new User();
+            user.setUser(a1.getUser());
+            user.setPassword(a1.getPassword());
+            user.setToken(token);
+            service.updateUser(user);
+            return user;
+        }
+
+
+        if ((a1.getUser().equals("mgariboglio")) && (a1.getPassword().equals("mgari2022")))
+        {
+            String token = getJWTToken(a1.getUser());
+            user = new User();
+            user.setUser(a1.getUser());
+            user.setPassword(a1.getPassword());
+            user.setToken(token);
+            service.updateUser(user);
+            return user;
+        }
+
+
         return user;
     }
 
