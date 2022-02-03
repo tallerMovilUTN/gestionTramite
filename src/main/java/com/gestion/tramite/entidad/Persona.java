@@ -41,7 +41,9 @@ public class Persona
 
     private Integer actaNac;
     private Integer nroFolioNac;
+    private String cmbFolioNac;
     private Integer nroTomoNac;
+    private String cmbTomoNac;
     private String ofRegCivilNac;
     private String ciudadRegCivilNac;
     private String provRegCivilNac;

@@ -19,7 +19,7 @@ public class Archivo {
     private String nombre;
     private String url;
     private Integer dni;
-
+    private String descripcion;
     private Date fechaAlta;
 
     private Integer estado;

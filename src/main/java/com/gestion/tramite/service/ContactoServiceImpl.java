@@ -50,8 +50,9 @@ public class ContactoServiceImpl implements ContactoService
             return null;
         }
         catDB.setEstado(0);
-
-        return repo.save(catDB);
+        repo.delete(catDB);
+        return catDB;
+        //return repo.save(catDB);
     }
 
     public void borrarContacto(Long id) {
@@ -84,6 +85,11 @@ public class ContactoServiceImpl implements ContactoService
     @Override
     public Contacto getContactosByIdPersonaAndTipoRelacion(Long id,Long idTipoRelacion) {
         return repo.getContactosByIdPersonaAndTipoRelacion(id,idTipoRelacion);
+    }
+
+    @Override
+    public List<Contacto> getOtrosContactosByIdPersona(Long id) {
+        return repo.getOtrosContactosByIdPersona(id);
     }
 
 

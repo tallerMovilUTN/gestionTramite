@@ -58,7 +58,9 @@ public class Contacto
     private Date fechaDefHasta;
     private Integer actaNac;
     private Integer nroFolioNac;
+    private String cmbFolioNac;
     private Integer nroTomoNac;
+    private String cmbTomoNac;
     private String ofRegCivilNac;
     private String ciudadRegCivilNac;
     private String provRegCivilNac;
@@ -66,7 +68,9 @@ public class Contacto
 
     private Integer actaMat;
     private Integer nroFolioMat;
+    private String cmbFolioMat;
     private Integer nroTomoMat;
+    private String cmbTomoMat;
     private String ofRegCivilMat;
     private String ciudadRegCivilMat;
     private String provRegCivilMat;
@@ -74,11 +78,16 @@ public class Contacto
 
     private Integer actaDef;
     private Integer nroFolioDef;
+    private String cmbFolioDef;
     private Integer nroTomoDef;
+    private String cmbTomoDef;
     private String ofRegCivilDef;
     private String ciudadRegCivilDef;
     private String provRegCivilDef;
     private String paisRegCivilDef;
+
+    private String apellidoNombrePadre;
+    private String apellidoNombreMadre;
 
 
 

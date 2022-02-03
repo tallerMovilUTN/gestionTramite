@@ -68,14 +68,22 @@ public class PersonaServiceImpl implements PersonaService
 
     @Override
     public Persona deletePersona(Long id) {
+        System.out.println("estoy en back deletePersona");
+
         Persona catDB = getPersona(id);
         if (null == catDB){
             return null;
         }
-        catDB.setEstado(0);
+        System.out.println("estoy en back deletePersona 2");
+        //catDB.setEstado(0);
 
-        return repo.save(catDB);
+        //return repo.save(catDB);
+
+        repo.delete(catDB);
+        return catDB;
     }
+
+
 
 
 

@@ -20,6 +20,8 @@ public interface ContactoRepositorio extends JpaRepository<Contacto, Long> {
     @Query("select c from Contacto c where c.persona.id = :idPersona and c.tipoRelacion.id = :tipoRelacion")
     public Contacto getContactosByIdPersonaAndTipoRelacion(@Param("idPersona") Long idPersona,@Param("tipoRelacion") Long tipoRelacion);
 
+    @Query("select c from Contacto c where c.persona.id = :idPersona and c.tipoRelacion.id>=100 ")
+    public List<Contacto> getOtrosContactosByIdPersona(@Param("idPersona") Long idPersona);
 
     @Transactional
     @Modifying
