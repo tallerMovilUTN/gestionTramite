@@ -34,7 +34,8 @@ public class UserController {
     //public User login(@RequestParam("user") String username, @RequestParam("password") String pwd) {
     public User login(@RequestBody User a1) {
         User user = null;
-        if ((a1.getUser().equals("admin")) && (a1.getPassword().equals("a1")))
+        if((a1.getUser().equals("admin")) && (a1.getPassword().equals("a1")))
+
         {
             String token = getJWTToken(a1.getUser());
             user = new User();

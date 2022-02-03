@@ -90,14 +90,15 @@ public class ContactoController
     @PostMapping(value = "/actualizarContacto")
     public ResponseEntity<Contacto> actualizarContacto(@RequestBody Contacto cli)
     {
+        logger.info("ESTOY EN getContactoooo-"+cli.getId());
         Contacto a1 = service.getContacto(cli.getId());
         if (a1 == null)
-        {
+        {  logger.info("ESTOY EN getContactoooo- ES NULL");
             a1 =  service.createContacto(cli);
             return ResponseEntity.status(HttpStatus.CREATED).body(a1);
         }
         else
-        {
+        {  logger.info("ESTOY EN getContactoooo- NOOO ES NULL");
             a1 =  service.updateContacto(cli);
             return ResponseEntity.ok(a1);
         }
@@ -126,7 +127,7 @@ public class ContactoController
 
 
 
-    /**
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Contacto> deleteContacto(@PathVariable("id") Long id){
         Contacto cliDel = service.deleteContacto(id);
@@ -135,7 +136,7 @@ public class ContactoController
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(cliDel);
-    }**/
+    }
 
 
     @GetMapping(value = "/getContactosByIdPersona/{idPersona}/{idTipoRelacion}")
@@ -143,6 +144,20 @@ public class ContactoController
     {
         logger.info("ESTOY EN getContacto-"+idPersona);
         Contacto result = service.getContactosByIdPersonaAndTipoRelacion(idPersona,idTipoRelacion);
+        if (result == null)
+        {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(result);
+    }
+
+
+
+    @GetMapping(value = "/getOtrosContactosByIdPersona/{idPersona}")
+    public ResponseEntity<List<Contacto>> getOtrosContactosByIdPersona(@PathVariable("idPersona") Long idPersona)
+    {
+        logger.info("ESTOY EN getContacto-"+idPersona);
+        List<Contacto> result = service.getOtrosContactosByIdPersona(idPersona);
         if (result == null)
         {
             return ResponseEntity.noContent().build();

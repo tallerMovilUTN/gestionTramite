@@ -11,6 +11,7 @@ public interface ContactoService {
 
     public List<Contacto> listAllContactos();
     public List<Contacto> getContactosByIdPersona(Long idPersona);
+    public List<Contacto> getOtrosContactosByIdPersona(Long idPersona);
     public Contacto getContactosByIdPersonaAndTipoRelacion(Long id,Long idTipoRelacion);
     public Contacto getContacto(Long id);
     public Contacto createContacto(Contacto a1);
