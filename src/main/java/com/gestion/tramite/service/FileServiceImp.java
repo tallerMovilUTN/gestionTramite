@@ -7,6 +7,8 @@ import com.gestion.tramite.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -24,13 +26,20 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Service
+@Configuration
 @RequiredArgsConstructor
 public class FileServiceImp implements FileService {
 
     Logger logger = LoggerFactory.getLogger(FileServiceImp.class);
+
+    @Value("${rutaDoc}")
+    private String rutaDoc;
+
     //Nombre de la carpeta donde vamos a almacenar los archivos
     //Se crea a nivel de raiz la carpeta
-    Path root = Paths.get("C:/IntelliJ/gestionTramiteDocumentos");
+    //Path root = Paths.get("C:/IntelliJ/gestionTramiteDocumentos");
+
+    Path root;
 
     private final FileRepositorio repo;
     //private final GestionTramiteRepositorio repo1;
@@ -38,6 +47,7 @@ public class FileServiceImp implements FileService {
     @Override
     public void init() {
         try {
+            root = Paths.get(rutaDoc);
             Files.createDirectory(root);
         } catch (IOException e) {
             throw new RuntimeException("No se puede inicializar la carpeta uploads");
@@ -48,6 +58,7 @@ public class FileServiceImp implements FileService {
     public void save(MultipartFile file) {
         try {
             //copy (que queremos copiar, a donde queremos copiar)
+            root = Paths.get(rutaDoc);
             Files.copy(file.getInputStream(),
                     this.root.resolve(file.getOriginalFilename()));
         } catch (IOException e) {
@@ -76,6 +87,7 @@ public class FileServiceImp implements FileService {
         try {
             //copy (que queremos copiar, a donde queremos copiar)
             //root = Paths.get(path);
+            root = Paths.get(rutaDoc);
             logger.info("ESTOY EN save FILE::: "+file.getName()+"-DNI: "+a1.getDni());
             a1.setEstado(1);
             a1.setFechaAlta(new Date());
@@ -126,8 +138,10 @@ public class FileServiceImp implements FileService {
     public Resource load(String filename) {
         try {
             String[] aux= filename.split("_");
+            root = Paths.get(rutaDoc);
 
             logger.info("ESTOY EN load: "+filename);
+            logger.info("RUTA: "+rutaDoc);
             Path auxPath = Paths.get(root+"/"+aux[0]);
             logger.info("auxPath:: "+auxPath);
 
@@ -182,7 +196,9 @@ public class FileServiceImp implements FileService {
         // Relativize sirve para crear una ruta relativa entre la ruta dada y esta ruta
         try
         {
+            root = Paths.get(rutaDoc);
             logger.info("ESTOY EN BUSCAR ARCHIVOS DE CARPETA");
+            logger.info("RUTA CARPETA: "+rutaDoc);
             Path auxPath = Paths.get(root+"/"+carpeta);
             logger.info("auxPath:: "+auxPath);
             return Files.walk(auxPath,1).filter(path -> !path.equals(auxPath)).map(auxPath::relativize);

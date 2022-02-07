@@ -30,8 +30,9 @@ public class PersonaServiceImpl implements PersonaService
 
     Logger logger = LoggerFactory.getLogger(PersonaServiceImpl.class);
 
-    @Value("${web.upload-path}")
-    private String ruta;
+
+    @Value("${rutaDoc}")
+    private String rutaDoc;
 
 
     private final PersonaRepositorio repo;
@@ -103,8 +104,8 @@ public class PersonaServiceImpl implements PersonaService
         try {
             //String localPath="C:/IntelliJ/gestionTramiteDocumentos";
             //Path file = Paths.get(ruta + filename);
-            logger.info("ESTOY EN LOAD===> "+ruta+carpeta+"/"+filename);
-            Path file = Paths.get(ruta+carpeta+"/"+filename);
+            logger.info("ESTOY EN LOAD===> "+rutaDoc+carpeta+"/"+filename);
+            Path file = Paths.get(rutaDoc+carpeta+"/"+filename);
 
             logger.info("ESTOY EN LOAD===> "+file.toUri());
 
