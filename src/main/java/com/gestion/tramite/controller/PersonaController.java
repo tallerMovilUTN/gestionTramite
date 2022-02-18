@@ -120,9 +120,6 @@ public class PersonaController
     }
 
 
-
-
-
     @PostMapping
     public ResponseEntity<Persona> createPersona(@RequestBody Persona cli)
     {
