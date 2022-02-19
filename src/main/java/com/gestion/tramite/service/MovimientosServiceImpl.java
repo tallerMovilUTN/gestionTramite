@@ -37,7 +37,7 @@ public class MovimientosServiceImpl  implements MovimientosService {
         Movimientos a1 = null;
         for (Movimientos mov:movimientos) 
         {
-            mov.setFechaMovimiento(new Date());
+            //mov.setFechaMovimiento(new Date());
             a1 =  repo.save(mov);
         }
         return a1;

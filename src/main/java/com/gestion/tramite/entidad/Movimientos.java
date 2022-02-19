@@ -18,15 +18,13 @@ public class Movimientos {
     @GenericGenerator(name = "native",strategy = "native")
     private Long id;
 
-    private Integer cantidadCuotas;
-
     private String tipoMovimiento;
 
     private String concepto;
 
     private double importe;
 
-    private Date fechaMovimiento;
+    private Date fechaVencimiento;
 
     private String urlArchivo;
 
