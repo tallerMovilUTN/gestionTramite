@@ -31,7 +31,7 @@ public class ContabilidadServiceImpl implements ContabilidadService {
     @Override
     public Contabilidad createContabilidad(Contabilidad a1) {
       //  a1.setEstado(1);
-        a1.setFechaAlta(new Date());
+        //a1.setFechaAlta(new Date());
         return repo.save(a1);
     }
 

@@ -25,6 +25,8 @@ public class Movimientos {
     private double importe;
 
     private Date fechaVencimiento;
+    private Date fechaMovimiento;
+    private Date fechaPago;
 
     private String urlArchivo;
 

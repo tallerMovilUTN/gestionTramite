@@ -19,6 +19,7 @@ public class Contabilidad {
     private Integer cantidadCuotas;
     private Integer diasVencimiento;
     private double importeTotal;
+    public String concepto;
     private Date fechaAlta;
     private Integer estado;
 
