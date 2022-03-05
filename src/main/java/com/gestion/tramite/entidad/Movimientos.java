@@ -19,7 +19,7 @@ public class Movimientos {
     private Long id;
 
     private String tipoMovimiento;
-
+    private Integer nroCuota;
     private String concepto;
 
     private double importe;

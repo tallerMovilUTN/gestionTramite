@@ -26,6 +26,6 @@ public class Contabilidad {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idGestionTramite")
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
-    private GestionTramite idGestionTramite;
+    private GestionTramite gestionTramite;
 
 }

@@ -140,7 +140,7 @@ public class MovimientosController
             String extFotoFrente = getFileExtension(fileMoviento.getOriginalFilename());
             logger.info("EXTENSION ARCHIVO_FOTO_FRENTE:: "+extFotoFrente);
 
-            Integer dniCliente = mov.getContabilidad().getIdGestionTramite().getPersona().getDni();
+            Integer dniCliente = mov.getContabilidad().getGestionTramite().getPersona().getDni();
             localPath=path+"/"+dniCliente;
             logger.info("localPath:: "+localPath);
             File direc= new File(localPath);
