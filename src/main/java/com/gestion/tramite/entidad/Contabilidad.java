@@ -20,6 +20,7 @@ public class Contabilidad {
     private Integer diasVencimiento;
     private double importeTotal;
     public String concepto;
+    private String tipoRegistro;
     private Date fechaAlta;
     private Integer estado;
 

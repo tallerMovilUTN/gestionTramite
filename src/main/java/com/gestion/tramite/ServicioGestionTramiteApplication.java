@@ -97,6 +97,7 @@ public class ServicioGestionTramiteApplication extends SpringBootServletInitiali
 			web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
 			web.ignoring().antMatchers("/fileController/**");
 			web.ignoring().antMatchers("/emailController/**");
+			web.ignoring().antMatchers("/movimientos/**");
 
 		}
 

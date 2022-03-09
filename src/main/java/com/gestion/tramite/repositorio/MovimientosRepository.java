@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface  MovimientosRepository extends JpaRepository<Movimientos, Long> {
 
-    @Query("select m from Movimientos m where m.contabilidad.id = :idContabilidad order by m.id desc")
+    @Query("select m from Movimientos m where m.contabilidad.id = :idContabilidad order by m.nroCuota asc")
     public List<Movimientos> listAllMovimientosByIdContabilidad(@Param("idContabilidad") Long idContabilidad);
 
 

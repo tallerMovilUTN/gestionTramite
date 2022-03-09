@@ -46,7 +46,7 @@ public class MovimientosController
     @Autowired
     private MovimientosService service;
 
-    @GetMapping
+    @GetMapping(value="/{idContabilidad}")
     public ResponseEntity<List<Movimientos>> listAllMovimientos(@PathVariable("idContabilidad") Long idContabilidad)
     {
         List<Movimientos> a1 = service.listAllMovimientos(idContabilidad);
@@ -56,8 +56,6 @@ public class MovimientosController
         return ResponseEntity.ok(a1);
     }
 
-
-    @GetMapping(value = "/{id}")
     public ResponseEntity<Movimientos> getMovimiento(@PathVariable("id") Long id)
     {
         Movimientos mov =  service.getMovimiento(id);
@@ -122,44 +120,44 @@ public class MovimientosController
 
     @ResponseBody
     @RequestMapping(value = "/actualizarMovimiento",method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Movimientos> actualizarMovimiento(@RequestParam("fileMoviento") MultipartFile fileMoviento,
-                                                     @RequestPart("mov") String dMov)
-
+    public ResponseEntity<Movimientos> actualizarMovimiento(/*@RequestParam("fileMoviento") MultipartFile fileMoviento,*/
+                                                            @RequestParam (required = false,name="fileMoviento")MultipartFile fileMoviento,
+                                                             @RequestPart("mov") String dMov)
     {
         logger.info("%%%%%%%%%%%%%%%%%%%ESTOY EN actualizarMovimiento");
         String localPath=null,nomFileFinal1=null;
-        boolean band;
+        boolean band=false;
+        Integer dniCliente=0;
         try
         {
             ObjectMapper mapper = new ObjectMapper();
             logger.info("JSON(MOVMIENTOS):: "+dMov);
             Movimientos mov = mapper.readValue(dMov, Movimientos.class);
 
+            if (fileMoviento!=null) {
+                logger.info("NOMBRE ARCHIVO_" + fileMoviento.getOriginalFilename());
+                String extFotoFrente = getFileExtension(fileMoviento.getOriginalFilename());
+                logger.info("EXTENSION ARCHIVO_FOTO_FRENTE:: " + extFotoFrente);
 
-            logger.info("NOMBRE ARCHIVO_"+fileMoviento.getOriginalFilename());
-            String extFotoFrente = getFileExtension(fileMoviento.getOriginalFilename());
-            logger.info("EXTENSION ARCHIVO_FOTO_FRENTE:: "+extFotoFrente);
-
-            Integer dniCliente = mov.getContabilidad().getGestionTramite().getPersona().getDni();
-            localPath=path+"/"+dniCliente;
-            logger.info("localPath:: "+localPath);
-            File direc= new File(localPath);
-            if (!direc.exists())
-            {
-                if (direc.mkdirs())
-                {
-                    System.out.println("SE CREO EL DIRECTOTIIO");
+                dniCliente = mov.getContabilidad().getGestionTramite().getPersona().getDni();
+                localPath = path + "/" + dniCliente;
+                logger.info("localPath:: " + localPath);
+                File direc = new File(localPath);
+                if (!direc.exists()) {
+                    if (direc.mkdirs()) {
+                        System.out.println("SE CREO EL DIRECTOTIIO");
+                    }
                 }
+
+                Date fechaActual = new Date();
+                System.out.println(Util.getFixedString(fechaActual, "yyyyMMdd-HHmmss"));
+
+                nomFileFinal1 = dniCliente+"_"+Util.getFixedString(fechaActual, "yyyyMMdd_HHmmss") + "_" + "Movimiento_" + mov.getNroCuota() + "_" + getFileExtension(fileMoviento.getOriginalFilename());
+              //     nomFileFinal1= cli.getDni()+"_"+Util.getFixedString(fechaActual, "yyyyMMdd_HHmmss")+"_"+"FotoFrente"+getFileExtension(fotoFrente.getOriginalFilename());
+                logger.info("nomFileFOTO1: " + nomFileFinal1);
+                band = FileUtils.upload(fileMoviento, localPath, nomFileFinal1);
+                mov.setUrlArchivo(nomFileFinal1);
             }
-
-            Date fechaActual=new Date();
-            System.out.println(Util.getFixedString(fechaActual, "yyyyMMdd-HHmmss"));
-
-            nomFileFinal1= Util.getFixedString(fechaActual, "yyyyMMdd_HHmmss")+"_"+"Movimiento_"+mov.getId()+"_"+getFileExtension(fileMoviento.getOriginalFilename());
-            logger.info("nomFileFOTO1: "+nomFileFinal1);
-            band = FileUtils.upload(fileMoviento, localPath, nomFileFinal1);
-            mov.setUrlArchivo(nomFileFinal1);
-
 
 
             String urlFile="";
@@ -186,7 +184,7 @@ public class MovimientosController
                 ////GRABO LOS DATOS EN LA BASE
                 mov.setUrlArchivo(urlFile);
 
-
+            }
                 Movimientos existeMov=service.getMovimiento(mov.getId());
                 if (Objects.nonNull(existeMov))/////ES UNA MODIFICACION
                 {
@@ -201,8 +199,8 @@ public class MovimientosController
                     logger.info("DIO DE ALTA EL MOVIMIENTO");
                 }//////if (Objects.nonNull(existePer))/
                 return ResponseEntity.status(HttpStatus.CREATED).body(mov);
-            }
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+           // return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 
 

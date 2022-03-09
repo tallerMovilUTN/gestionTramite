@@ -20,7 +20,7 @@ public class ContabilidadServiceImpl implements ContabilidadService {
 
     @Override
     public List<Contabilidad> listAllContabilidad() {
-        return repo.findAll();
+        return repo.listAllContabilidad();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class ContabilidadServiceImpl implements ContabilidadService {
 
     @Override
     public Contabilidad createContabilidad(Contabilidad a1) {
-      //  a1.setEstado(1);
+        a1.setEstado(1);
         //a1.setFechaAlta(new Date());
         return repo.save(a1);
     }
@@ -47,7 +47,8 @@ public class ContabilidadServiceImpl implements ContabilidadService {
             return null;
         }
         a1.setEstado(0);
-        repo.delete(a1);
+        repo.save(a1);
+        //repo.delete(a1);
         return a1;
     }
 
