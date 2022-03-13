@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 @CrossOrigin( origins = "*" , methods = { RequestMethod. GET , RequestMethod. POST,RequestMethod.PUT , RequestMethod.DELETE})
 @RestController
 @RequestMapping(value = "/personas")
+//@Api(value="personas", description="Operaciones sobre la clase Persona")
 public class PersonaController
 {
     @Autowired
@@ -59,6 +60,12 @@ public class PersonaController
     Logger logger = LoggerFactory.getLogger(PersonaController.class);
 
 
+    /**@ApiOperation(value = "Listar todas las personas", response = Persona[].class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Personas obtenidas correctamente"),
+            @ApiResponse(code = 401, message = "No estas autorizado para ver obtener personas"),
+            @ApiResponse(code = 403, message = "Está tratando de acceder a una persona no permitida"),
+    })**/
     @GetMapping
     public ResponseEntity<List<Persona>> listCliente()
     {
@@ -74,12 +81,12 @@ public class PersonaController
 
 
 
-
-
-
-
-
-
+    /**@ApiOperation(value = "Retorna una persona por id", response = Persona.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Persona obtenida correctamente"),
+            @ApiResponse(code = 401, message = "No estas autorizado para ver obtener personas"),
+            @ApiResponse(code = 403, message = "Está tratando de acceder a una persona no permitida"),
+    })**/
     @GetMapping(value = "/{id}")
     public ResponseEntity<Persona> getPersona(@PathVariable("id") Long id)
     {
@@ -94,6 +101,12 @@ public class PersonaController
     }
 
 
+    /**@ApiOperation(value = "Retorna la persona con el DNI pasado de argumento", response = Persona.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Persona obtenida correctamente"),
+            @ApiResponse(code = 401, message = "No estas autorizado para ver obtener personas"),
+            @ApiResponse(code = 403, message = "Está tratando de acceder a una persona no permitida"),
+    })**/
     @GetMapping(value = "/getPersonaPorDni/{dni}")
     public ResponseEntity<Persona> getPersona(@PathVariable("dni") int dni)
     {
@@ -109,7 +122,12 @@ public class PersonaController
 
 
 
-
+    /**@ApiOperation(value = "Retorna la url de un archivo", response = Resource.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Recurso obtenido correctamente"),
+            @ApiResponse(code = 401, message = "No estas autorizado para ver obtener personas"),
+            @ApiResponse(code = 403, message = "Está tratando de acceder a una persona no permitida"),
+    })**/
     @GetMapping("/file/{filename}")
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable String filename,@RequestParam("carpeta") String carpeta) {
@@ -120,7 +138,14 @@ public class PersonaController
     }
 
 
+
     @PostMapping
+    /**@ApiOperation(value = "Añadir una persona", response = Persona.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Persona creada correctamente"),
+            @ApiResponse(code = 401, message = "No estas autorizado para ver obtener personas"),
+            @ApiResponse(code = 403, message = "Está tratando de acceder a una persona no permitida"),
+    })**/
     public ResponseEntity<Persona> createPersona(@RequestBody Persona cli)
     {
         Persona a1 =  service.createPersona(cli);
@@ -129,6 +154,12 @@ public class PersonaController
 
 
 
+    /**@ApiOperation(value = "Añadir una persona con las Fotos de Frente y Perfil pasadas como argumentos", response = Persona.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Persona creada correctamente"),
+            @ApiResponse(code = 401, message = "No estas autorizado para ver obtener personas"),
+            @ApiResponse(code = 403, message = "Está tratando de acceder a una persona no permitida"),
+    })**/
     @PostMapping(value = "/altaPersona", consumes = {MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
     public  ResponseEntity<Persona> altaPersona(@RequestPart("persona") Persona cli,@RequestParam("fotoFrente") MultipartFile file1, @RequestParam("fotoDorso") MultipartFile file2){
         logger.info("ESTOY EN CREAR PERSONA ");
@@ -161,12 +192,13 @@ public class PersonaController
 
 
 
-    /**
-     *
-     * @return
-     */
+    /**@ApiOperation(value = "Actualiza una persona con las Fotos de Frente y Perfil y datos de familiares pasadas como argumentos", response = Persona.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Persona creada correctamente"),
+            @ApiResponse(code = 401, message = "No estas autorizado para ver obtener personas"),
+            @ApiResponse(code = 403, message = "Está tratando de acceder a una persona no permitida"),
+    })**/
     @ResponseBody
-    //@RequestMapping(value = "/img",method = RequestMethod.POST)
     @RequestMapping(value = "/upload",method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Persona> upload(@RequestParam("fotoFrente") MultipartFile fotoFrente,
                          @RequestParam("fotoDorso" )MultipartFile fotoDorso,
@@ -412,6 +444,12 @@ public class PersonaController
 
 
 
+    /**@ApiOperation(value = "Actualiza la persona con el id pasado como argumento", response = Persona.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Persona actualida correctamente"),
+            @ApiResponse(code = 401, message = "No estas autorizado para ver obtener personas"),
+            @ApiResponse(code = 403, message = "Está tratando de acceder a una persona no permitida"),
+    })**/
     @PutMapping(value = "/{id}")
     public ResponseEntity<Persona> updatePersona(@PathVariable("id") Long id, @RequestBody Persona cli){
         cli.setId(id);
@@ -424,6 +462,13 @@ public class PersonaController
     }
 
 
+
+    /**@ApiOperation(value = "Elimina la persona con el id pasado como argumento", response = Persona.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Persona eliminada correctamente"),
+            @ApiResponse(code = 401, message = "No estas autorizado para ver obtener personas"),
+            @ApiResponse(code = 403, message = "Está tratando de acceder a una persona no permitida"),
+    })**/
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Persona> deletePersona(@PathVariable("id") Long id)
     {
