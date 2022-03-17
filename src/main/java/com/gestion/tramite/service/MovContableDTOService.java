@@ -46,9 +46,9 @@ public class MovContableDTOService
         String filtroEstado="and c.estado = 1 ";
         String query =  "select " +
                         "c.id as idContabilidad," +
-                        "p.apellido, p.nombre, p.dni, t.tipo as tipoTramite," +
+                        "p.apellido, p.nombre, p.dni, t.tipo as tipoTramite, " +
                         "m.nroCuota,c.importeTotal,c.diasVencimiento,c.concepto as conceptoContable,c.cantidadCuotas," +
-                        "m.estado ,m.importe,m.fechaVencimiento,m.fechaPago,m.concepto as conceptoMov " +
+                        "m.estado ,m.importe,m.fechaVencimiento,m.fechaPago,m.concepto as conceptoMov, m.tipoMovimiento " +
                         "from Contabilidad c," +
                         "Movimientos m," +
                         "GestionTramite g," +
@@ -80,6 +80,12 @@ public class MovContableDTOService
             if (filtro.getTipoTramite().length() > 0)
             {
                 query = query + "and t.tipo like '%"+filtro.getTipoTramite()+"%' ";
+            }
+
+
+            if (filtro.getTipoMovimiento().length() > 0)
+            {
+                query = query + "and m.tipoMovimiento like '%"+filtro.getTipoMovimiento()+"%' ";
             }
 
             if (filtro.getDni() != 0)
@@ -130,7 +136,7 @@ public class MovContableDTOService
 
             if (filtro.getEstado() != -1)
             {
-                filtroEstado ="and c.estado = "+filtro.getEstado();
+                filtroEstado ="and m.estado ="+filtro.getEstado();
             }
 
 
@@ -138,7 +144,7 @@ public class MovContableDTOService
         query = query +  filtroEstado;
 
 
-        query = query +  "order by m.nroCuota";
+        query = query +  " order by c.id, m.nroCuota";
 
         log.info(query);
 
@@ -195,6 +201,8 @@ public class MovContableDTOService
             //mov.setFechaPago();
 
             mov.setConceptoMov(obj[14].toString());
+
+            mov.setTipoMovimiento(obj[15].toString());
 
             result.add(mov);
 

@@ -22,6 +22,8 @@ public class FiltroMovDTO
 
     private String tipoTramite;
 
+    private String tipoMovimiento;
+
     private Integer estado;
 
     private Date fechaVtoDesde;

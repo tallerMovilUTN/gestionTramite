@@ -38,6 +38,9 @@ where m.idContabilidad = c.id
     private String apellido;
     private String nombre;
     private Integer dni;
+
+    private String tipoMovimiento;
+
     private String tipoTramite;
 
     private double importeTotal;
