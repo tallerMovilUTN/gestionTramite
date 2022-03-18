@@ -8,7 +8,7 @@ import java.util.List;
 public interface MovimientosService
 {
     public List<Movimientos> listAllMovimientos(Long idContabilidad);
-
+    public List<Movimientos> listAllCuotasPorVencer();
     public Movimientos getMovimiento(Long id);
     public Movimientos nuevoMovimiento(Movimientos a1);
     public Movimientos createMovimientos(List<Movimientos> a1);

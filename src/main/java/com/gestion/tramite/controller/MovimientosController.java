@@ -56,6 +56,17 @@ public class MovimientosController
         return ResponseEntity.ok(a1);
     }
 
+//  @RequestMapping(value = "/actualizarMovimiento",method = RequestMethod.POST, consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @GetMapping(value="/obtenerCuotasPorVencer")
+    public ResponseEntity<List<Movimientos>> listAllCuotasPorvencer()
+    {
+        List<Movimientos> a1 = service.listAllCuotasPorVencer();
+        if (a1.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(a1);
+    }
+
     public ResponseEntity<Movimientos> getMovimiento(@PathVariable("id") Long id)
     {
         Movimientos mov =  service.getMovimiento(id);

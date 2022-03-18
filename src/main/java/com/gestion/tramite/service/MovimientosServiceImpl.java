@@ -27,6 +27,13 @@ public class MovimientosServiceImpl  implements MovimientosService {
     }
 
     @Override
+    public List<Movimientos> listAllCuotasPorVencer()
+    {
+        return repo.listAllCuotasPorVencer();
+    }
+
+
+    @Override
     public Movimientos getMovimiento(Long id) {
         return repo.findById(id).orElse(null);
     }
